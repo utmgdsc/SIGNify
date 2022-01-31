@@ -1,6 +1,6 @@
-# signify
+# frontend
 
-A new Flutter project.
+Comvert sign language into text/speech
 
 ## Getting Started
 
