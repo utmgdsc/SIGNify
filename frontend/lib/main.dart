@@ -4,6 +4,21 @@ void main() {
   runApp(const MyApp());
 }
 
+// Custom Green for app
+Map<int, Color> primary =
+{
+  50:Color.fromRGBO(17,138,126, .1),
+  100:Color.fromRGBO(17,138,126, .2),
+  200:Color.fromRGBO(17,138,126, .3),
+  300:Color.fromRGBO(17,138,126, .4),
+  400:Color.fromRGBO(17,138,126, .5),
+  500:Color.fromRGBO(17,138,126, .6),
+  600:Color.fromRGBO(17,138,126, .7),
+  700:Color.fromRGBO(17,138,126, .8),
+  800:Color.fromRGBO(17,138,126, .9),
+  900:Color.fromRGBO(17,138,126, 1),
+};
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -13,17 +28,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: MaterialColor(0xFF118A7E, primary),
       ),
+      darkTheme: ThemeData.dark(), // default dark theme, only when we have too
+      themeMode: ThemeMode.system,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
