@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-//import 'package:temp/video_page.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -46,28 +45,31 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     if (_initialized) {
-      return Container(
-        color: Colors.white,
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+      return const Center(
+        child: CircularProgressIndicator(),
       );
     } else {
-      return Center(
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            CameraPreview(_controller),
-            Padding(
-              padding: const EdgeInsets.all(25),
-              child: FloatingActionButton(
-                backgroundColor: Colors.red,
-                child: Icon(_recording ? Icons.stop : Icons.circle),
-                onPressed: () => _recordVideo(),
-              ),
+      return Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          CameraPreview(_controller),
+          Container(
+            alignment: Alignment.bottomCenter,
+            width: double.infinity,
+            height: 100,
+            decoration: const BoxDecoration(
+              color: Colors.black54,
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25),
+            child: FloatingActionButton(
+              backgroundColor: const Color(0xFFA5D6D1),
+              child: Icon(_recording ? Icons.stop : Icons.circle),
+              onPressed: () => _recordVideo(),
+            ),
+          ),
+        ],
       );
     }
   }
