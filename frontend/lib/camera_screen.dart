@@ -25,6 +25,7 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
+  // Set up the front camera
   _cameraSetUp() async {
     final cameras = await availableCameras();
     _controller = CameraController(cameras[1], ResolutionPreset.max);
@@ -32,6 +33,7 @@ class _CameraScreenState extends State<CameraScreen> {
     setState(() => _initialized = false);
   }
 
+  // Start or stop recording
   _recordVideo() async {
     if (_recording) {
       final file = await _controller.stopVideoRecording();
