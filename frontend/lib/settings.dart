@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-class MySettingsPage extends StatefulWidget {
-  const MySettingsPage({Key? key}) : super(key: key);
+class MySettingsPage extends StatelessWidget {
+  final MaterialColor theme;
 
-  @override
-  State<MySettingsPage> createState() => _MySettingsPageState();
-}
+  const MySettingsPage({Key? key, required this.theme}) : super(key: key);
 
-class _MySettingsPageState extends State<MySettingsPage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -120,19 +117,19 @@ class _MySettingsPageState extends State<MySettingsPage> {
           ),
           const SizedBox(height: 10,),
           Row(
-            children: const <Widget> [
-              SizedBox(width: 15,),
+            children: <Widget> [
+              const SizedBox(width: 15,),
               Icon(
                 Icons.logout,
-                color: Colors.teal,
+                color: theme[900],
                 size: 24.0,
               ),
-              SizedBox(width: 5,),
+              const SizedBox(width: 5,),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Log out",
-                  style: TextStyle(fontWeight: FontWeight.w900, color: Colors.teal),
+                  style: TextStyle(fontWeight: FontWeight.w900, color: theme[900]),
                 ),
               ),
               ],
