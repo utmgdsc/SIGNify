@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/settings.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -51,27 +52,52 @@ class _CameraScreenState extends State<CameraScreen> {
         child: CircularProgressIndicator(),
       );
     } else {
-      return Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          CameraPreview(_controller),
-          Container(
-            alignment: Alignment.bottomCenter,
-            width: double.infinity,
-            height: 100,
-            decoration: const BoxDecoration(
-              color: Colors.black54,
+      return Scaffold(
+        body: Stack(
+          children: [
+            CameraPreview(_controller),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MySettingsPage()),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.settings,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(25),
-            child: FloatingActionButton(
-              backgroundColor: const Color(0xFFA5D6D1),
-              child: Icon(_recording ? Icons.stop : Icons.circle),
-              onPressed: () => _recordVideo(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                height: 100,
+                decoration: const BoxDecoration(
+                  color: Colors.black54,
+                ),
+              ),
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(25),
+                child: FloatingActionButton(
+                  backgroundColor: const Color(0xFFA5D6D1),
+                  child: Icon(_recording ? Icons.stop : Icons.circle),
+                  onPressed: () => _recordVideo(),
+                ),
+              ),
+            ),
+          ],
+        ),
       );
     }
   }
