@@ -79,15 +79,8 @@ class _CameraScreenState extends State<CameraScreen> {
               child: Container(
                 width: double.infinity,
                 height: 100,
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(25),
+                color: Colors.black54,
+                padding: EdgeInsets.all(25),
                 child: FloatingActionButton(
                   backgroundColor: const Color(0xFFA5D6D1),
                   child: Icon(_recording ? Icons.stop : Icons.circle),
