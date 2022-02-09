@@ -58,8 +58,7 @@ class _CameraScreenState extends State<CameraScreen> {
             CameraPreview(_controller),
             Align(
               alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 30),
+              child: SafeArea(
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
