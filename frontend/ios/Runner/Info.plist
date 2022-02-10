@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>NSCameraUsageDescription</key>
-    <string>Use camera for recording</string>
+    <string>Support Camera Plugins</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Support Camera Plugins</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
