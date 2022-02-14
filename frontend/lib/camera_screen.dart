@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({Key? key}) : super(key: key);
+  final MaterialColor theme;
+  const CameraScreen({Key? key, required this.theme}) : super(key: key);
 
   @override
   _CameraScreenState createState() => _CameraScreenState();
@@ -63,10 +64,12 @@ class _CameraScreenState extends State<CameraScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MySettingsPage()),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MySettingsPage(theme: widget.theme)),
                     );
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.settings,
                     size: 30,
                     color: Colors.black,
@@ -80,9 +83,9 @@ class _CameraScreenState extends State<CameraScreen> {
                 width: double.infinity,
                 height: 100,
                 color: Colors.black54,
-                padding: EdgeInsets.all(25),
+                padding: const EdgeInsets.all(25),
                 child: FloatingActionButton(
-                  backgroundColor: const Color(0xFFA5D6D1),
+                  backgroundColor: widget.theme[900],
                   child: Icon(_recording ? Icons.stop : Icons.circle),
                   onPressed: () => _recordVideo(),
                 ),
