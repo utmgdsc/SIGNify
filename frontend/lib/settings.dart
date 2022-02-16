@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/theme_model.dart';
+import 'package:provider/provider.dart';
 
-class MySettingsPage extends StatelessWidget {
-  final MaterialColor theme;
+import 'customTheme.dart';
 
-  const MySettingsPage({Key? key, required this.theme}) : super(key: key);
+class MySettingsPage extends StatefulWidget {
+  const MySettingsPage({Key? key}) : super(key: key);
 
   @override
+  _MySettingsPageState createState() => _MySettingsPageState();
+}
+
+class _MySettingsPageState extends State<MySettingsPage> {
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    themeNotifier.getTheme;
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -64,7 +68,9 @@ class MySettingsPage extends StatelessWidget {
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
-              onPressed: () {},
+              onPressed: () {
+                themeNotifier.changeThemeMode();
+              },
             ),
             TextButton.icon(
               icon: const Icon(
@@ -78,7 +84,9 @@ class MySettingsPage extends StatelessWidget {
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
-              onPressed: () {},
+              onPressed: () {
+                chooseThemeColor(themeNotifier);
+              },
             ),
             TextButton.icon(
               icon: const Icon(
@@ -96,6 +104,7 @@ class MySettingsPage extends StatelessWidget {
             ),
             const Divider(
               color: Colors.grey,
+              thickness: 1,
               indent: 15,
               endIndent: 15,
             ),
@@ -117,6 +126,48 @@ class MySettingsPage extends StatelessWidget {
         ),
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  chooseThemeColor(ThemeNotifier themeNotifier) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Choose Theme Color"),
+            content: Container(
+              width: 50,
+              child: GridView.count(
+                crossAxisCount: 2,
+                childAspectRatio: 3 / 2,
+                mainAxisSpacing: 30,
+                padding: const EdgeInsets.only(top: 20),
+                children: [
+                  colorCircle(themeNotifier, Colors.pink, 'pink'),
+                  colorCircle(themeNotifier, defaultColor, 'default'),
+                  colorCircle(themeNotifier, Colors.orange, 'orange'),
+                  colorCircle(themeNotifier, Colors.brown, 'brown'),
+                  colorCircle(themeNotifier, Colors.lightBlue, 'lightBlue'),
+                  colorCircle(themeNotifier, Colors.purple, 'purple'),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  colorCircle(
+      ThemeNotifier themeNotifier, MaterialColor color, String colorString) {
+    return ElevatedButton(
+      onPressed: () {
+        themeNotifier.setThemeColor(
+            ThemeData(primarySwatch: color), colorString);
+      },
+      style: ElevatedButton.styleFrom(
+        primary: color,
+        shape: const CircleBorder(),
+      ),
+      child: null,
     );
   }
 }

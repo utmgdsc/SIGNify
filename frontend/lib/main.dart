@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/settings.dart';
+import 'package:frontend/customTheme.dart';
 import 'package:frontend/camera_screen.dart';
+import 'package:frontend/theme_model.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(const MyApp());
-}
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.getInstance().then((sharedPreferences) {
+    var color = sharedPreferences.getString('ThemeColor');
+    var isDark = sharedPreferences.getBool('isDark');
 
-// Custom Green for app
-Map<int, Color> primary = {
-  50: const Color.fromRGBO(17, 138, 126, .1),
-  100: const Color.fromRGBO(17, 138, 126, .2),
-  200: const Color.fromRGBO(17, 138, 126, .3),
-  300: const Color.fromRGBO(17, 138, 126, .4),
-  400: const Color.fromRGBO(17, 138, 126, .5),
-  500: const Color.fromRGBO(17, 138, 126, .6),
-  600: const Color.fromRGBO(17, 138, 126, .7),
-  700: const Color.fromRGBO(17, 138, 126, .8),
-  800: const Color.fromRGBO(17, 138, 126, .9),
-  900: const Color.fromRGBO(17, 138, 126, 1),
-};
+    if (color == 'pink') {
+      currentTheme = ThemeData(primarySwatch: Colors.pink);
+    } else if (color == 'orange') {
+      currentTheme = ThemeData(primarySwatch: Colors.orange);
+    } else if (color == 'brown') {
+      currentTheme = ThemeData(primarySwatch: Colors.brown);
+    } else if (color == 'lightBlue') {
+      currentTheme = ThemeData(primarySwatch: Colors.lightBlue);
+    } else if (color == 'purple') {
+      currentTheme = ThemeData(primarySwatch: Colors.purple);
+    } else {
+      currentTheme = defaultTheme;
+    }
+
+    if (isDark != null && isDark) {
+      currentTheme = ThemeData.dark();
+    }
+
+    runApp(const MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -26,19 +39,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    MaterialColor themeColour = MaterialColor(0xFF118A7E, primary);
-
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: themeColour,
+    return ChangeNotifierProvider(
+      create: (context) => ThemeNotifier(currentTheme),
+      child: Consumer<ThemeNotifier>(
+        builder: (context, themeNotifier, child) => MaterialApp(
+          title: 'SIGNify',
+          theme: themeNotifier.getTheme,
+          darkTheme: ThemeData.dark(),
+          themeMode: ThemeMode.system,
+          home: CameraScreen(),
+        ),
       ),
-      darkTheme: ThemeData.dark(), // default dark theme, only when we have too
-      themeMode: ThemeMode.system,
-      home: CameraScreen(
-        theme: themeColour,
-      ),
-      //home: MySettingsPage(theme: themeColour,), // uncomment when settings button is made then we can reroute to settings page
     );
   }
 }
