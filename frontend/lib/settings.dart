@@ -14,6 +14,7 @@ class MySettingsPage extends StatefulWidget {
 class _MySettingsPageState extends State<MySettingsPage> {
   @override
   Widget build(BuildContext context) {
+    // Create themeNotifier variable to access theme_model method
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     themeNotifier.getTheme;
 
@@ -24,6 +25,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
         title: const Text("Settings"),
       ),
       body: Container(
+        // Space between appBar and menu
         margin: const EdgeInsets.only(top: 50),
         child: Column(
           // Column is also a layout widget. It takes a list of children and
@@ -40,8 +42,10 @@ class _MySettingsPageState extends State<MySettingsPage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
+          // Stretch button to full width
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            // History button
             TextButton.icon(
               icon: const Icon(
                 Icons.access_time,
@@ -56,6 +60,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                   alignment: Alignment.centerLeft),
               onPressed: () {},
             ),
+            // Dark/Light theme button
             TextButton.icon(
               icon: const Icon(
                 Icons.mode_night_outlined,
@@ -72,6 +77,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 themeNotifier.changeThemeMode();
               },
             ),
+            // Theme Color button
             TextButton.icon(
               icon: const Icon(
                 Icons.border_color_outlined,
@@ -88,6 +94,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 chooseThemeColor(themeNotifier);
               },
             ),
+            // Text size button
             TextButton.icon(
               icon: const Icon(
                 Icons.format_size_sharp,
@@ -108,6 +115,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
               indent: 15,
               endIndent: 15,
             ),
+            // Log out button
             TextButton.icon(
               icon: const Icon(
                 Icons.logout,
@@ -129,6 +137,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     );
   }
 
+  // Pop-up window
   chooseThemeColor(ThemeNotifier themeNotifier) {
     showDialog(
         context: context,
@@ -137,8 +146,11 @@ class _MySettingsPageState extends State<MySettingsPage> {
             title: const Text("Choose Theme Color"),
             content: Container(
               width: 50,
+              // Grid of color
               child: GridView.count(
+                // Two element in one row
                 crossAxisCount: 2,
+                // Spacing between element
                 childAspectRatio: 3 / 2,
                 mainAxisSpacing: 30,
                 padding: const EdgeInsets.only(top: 20),
@@ -156,13 +168,16 @@ class _MySettingsPageState extends State<MySettingsPage> {
         });
   }
 
+  // Color circle button
   colorCircle(
       ThemeNotifier themeNotifier, MaterialColor color, String colorString) {
     return ElevatedButton(
+      // Call setTheme method
       onPressed: () {
         themeNotifier.setThemeColor(
             ThemeData(primarySwatch: color), colorString);
       },
+      // Color button shape
       style: ElevatedButton.styleFrom(
         primary: color,
         shape: const CircleBorder(),
