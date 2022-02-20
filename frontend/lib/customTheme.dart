@@ -18,7 +18,29 @@ Map<int, Color> primary = {
 // Main theme color
 final defaultColor = MaterialColor(0xFF118A7E, primary);
 
-// Main theme
-final defaultTheme = ThemeData(
-  primarySwatch: defaultColor,
-);
+// Generate custom theme
+ThemeData createThemeData(MaterialColor color, bool isDark) {
+  if (isDark) {
+    return ThemeData(
+      primarySwatch: color,
+      brightness: Brightness.dark,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: color,
+        foregroundColor: Colors.black,
+      ),
+    );
+  } else {
+    return ThemeData(
+      primarySwatch: color,
+      brightness: Brightness.light,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+      ),
+      appBarTheme: AppBarTheme(
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+      ),
+    );
+  }
+}

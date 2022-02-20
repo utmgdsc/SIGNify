@@ -174,8 +174,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     return ElevatedButton(
       // Call setTheme method
       onPressed: () {
-        themeNotifier.setThemeColor(
-            ThemeData(primarySwatch: color), colorString);
+        themeNotifier.setThemeColor(color, colorString);
       },
       // Color button shape
       style: ElevatedButton.styleFrom(
