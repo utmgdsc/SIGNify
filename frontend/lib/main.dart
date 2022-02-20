@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
+import 'package:frontend/history.dart';
 import 'package:frontend/camera_screen.dart';
 
 void main() {
@@ -36,8 +37,9 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(), // default dark theme, only when we have too
       themeMode: ThemeMode.system,
-      home: const CameraScreen(),
+      // home: const CameraScreen(),
       //home: MySettingsPage(theme: themeColour,), // uncomment when settings button is made then we can reroute to settings page
+      home: HistoryPage(theme: themeColour,),
     );
   }
 }
