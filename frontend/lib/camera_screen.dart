@@ -66,7 +66,7 @@ class _CameraScreenState extends State<CameraScreen> {
                       MaterialPageRoute(builder: (context) => MySettingsPage()),
                     );
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.settings,
                     size: 30,
                     color: Colors.black,
@@ -80,9 +80,8 @@ class _CameraScreenState extends State<CameraScreen> {
                 width: double.infinity,
                 height: 100,
                 color: Colors.black54,
-                padding: EdgeInsets.all(25),
+                padding: const EdgeInsets.all(25),
                 child: FloatingActionButton(
-                  backgroundColor: const Color(0xFFA5D6D1),
                   child: Icon(_recording ? Icons.stop : Icons.circle),
                   onPressed: () => _recordVideo(),
                 ),
