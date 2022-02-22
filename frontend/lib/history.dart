@@ -11,9 +11,7 @@ List<String> history = [
 ];
 
 class HistoryPage extends StatelessWidget {
-  final MaterialColor theme;
-
-  const HistoryPage({Key? key, required this.theme}) : super(key: key);
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
