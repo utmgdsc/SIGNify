@@ -52,22 +52,19 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 Icons.access_time,
                 size: 24.0,
               ),
-              label: TextButton(
-                child: const Text(
+              label: const Text(
                     "History",
                     style: TextStyle(fontWeight: FontWeight.w900),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HistoryPage()),
-                  );
-                },
-              ),
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()),
+                );
+              },
             ),
             // Dark/Light theme button
             TextButton.icon(
