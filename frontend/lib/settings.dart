@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme_model.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/history.dart';
 
 import 'customTheme.dart';
 
@@ -52,13 +53,18 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 size: 24.0,
               ),
               label: const Text(
-                "History",
-                style: TextStyle(fontWeight: FontWeight.w900),
-              ),
+                    "History",
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                ),
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()),
+                );
+              },
             ),
             // Dark/Light theme button
             TextButton.icon(
