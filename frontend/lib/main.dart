@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/customTheme.dart';
 import 'package:frontend/camera_screen.dart';
 import 'package:frontend/theme_model.dart';
+import 'package:frontend/login_page.dart';
+import 'package:frontend/create_account.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,7 +49,7 @@ class MyApp extends StatelessWidget {
         builder: (context, themeNotifier, child) => MaterialApp(
           title: 'SIGNify',
           theme: themeNotifier.getTheme,
-          home: CameraScreen(),
+          home: LoginPage(),
         ),
       ),
     );
