@@ -21,7 +21,7 @@ def upload_video():
 
 @app.route("/register", methods = ["POST"])
 def register():
-    account = json.load(request)
+    account = request.get_json()
     result = register_account(account["email"], account["password"])
     response = {"result": result}
     return json.dumps(response)
