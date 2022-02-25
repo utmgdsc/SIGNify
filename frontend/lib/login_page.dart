@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -126,12 +127,20 @@ class _LoginPage extends State<LoginPage> {
           fontSize: 15,
         ),
       ),
+      validator: (email) {
+        if (email == null || email.isEmpty) {
+          return ('Please enter an email');
+        } else if (EmailValidator.validate(email)) {
+          return ('Please enter a valid email');
+        }
+        return null;
+      },
     );
   }
 
   Widget passwordField() {
     return TextFormField(
-      obscureText: True,
+      obscureText: true,
       decoration: InputDecoration(
         labelStyle: TextStyle(
           color: Colors.black,

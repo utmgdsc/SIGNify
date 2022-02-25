@@ -1,5 +1,6 @@
 from flask import Flask, request
 import json
+from authentication import *
 
 app = Flask(__name__)
 
@@ -16,6 +17,20 @@ def upload_video():
         response = convert_ASL(request)
     except Exception:
         response = {"error": 400, "message": "Error cannot convert video to text"}
+    return json.dumps(response)
+
+@app.route("/register", methods = ["POST"])
+def register():
+    account = json.load(request)
+    result = register_account(account["email"], account["password"])
+    response = {"result": result}
+    return json.dumps(response)
+
+@app.route("/login", methods = ["POST"])
+def login():
+    account = json.load(request)
+    result = login_account(account["email"], account["password"])
+    response = {"result": result}
     return json.dumps(response)
 
 

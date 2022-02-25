@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -165,6 +166,14 @@ class _CreateAccount extends State<CreateAccount> {
           fontSize: 15,
         ),
       ),
+      validator: (email) {
+        if (email == null || email.isEmpty) {
+          return ('Please enter an email');
+        } else if (EmailValidator.validate(email)) {
+          return ('Please enter a valid email');
+        }
+        return null;
+      },
     );
   }
 
