@@ -258,7 +258,7 @@ class _CreateAccount extends State<CreateAccount> {
   }
 
   createAccount(String emailText, String passwordText) async {
-    var url = Uri.parse('http://10.0.2.2:5000/register');
+    var url = Uri.parse('http://127.0.0.1:5000/register');
     var response = await http.post(
       url,
       headers: <String, String>{

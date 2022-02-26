@@ -28,7 +28,7 @@ def register():
 
 @app.route("/login", methods = ["POST"])
 def login():
-    account = json.load(request)
+    account = request.get_json()
     result = login_account(account["email"], account["password"])
     response = {"result": result}
     return json.dumps(response)

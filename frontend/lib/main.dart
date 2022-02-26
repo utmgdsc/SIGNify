@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         builder: (context, themeNotifier, child) => MaterialApp(
           title: 'SIGNify',
           theme: themeNotifier.getTheme,
-          home: CreateAccount(),
+          home: LoginPage(),
         ),
       ),
     );
