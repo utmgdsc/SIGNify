@@ -1,14 +1,9 @@
+import json
+
 import pyrebase
 
-firebaseConfig = {
-    "apiKey": "AIzaSyD-u4ZvfCY1gvonlMfO1nApRSUwMR_1fw4",
-    "authDomain": "signify-10529.firebaseapp.com",
-    "databaseURL": "https://signify-10529.firebaseio.com",
-    "projectId": "signify-10529",
-    "storageBucket": "signify-10529.appspot.com",
-    "messagingSenderId": "544688048548",
-    "appId": "1:544688048548:web:dfc7c1be04f31c4cae5931"
-}
+firebaseJSON = open('firebase.json')
+firebaseConfig = json.load(firebaseJSON)
 
 # initialize firebase
 firebase = pyrebase.initialize_app(firebaseConfig)
