@@ -139,8 +139,10 @@ class _LoginPage extends State<LoginPage> {
         ),
       ),
       validator: (value) {
+        // check email empty
         if (value == null || value.isEmpty) {
           return ('Please enter an email');
+          // check email format
         } else if (!EmailValidator.validate(value)) {
           return ('Please enter a valid email');
         }
@@ -169,7 +171,9 @@ class _LoginPage extends State<LoginPage> {
   }
 
   login(String emailText, String passwordText) async {
+    // parse URL
     var url = Uri.parse('http://127.0.0.1:5000/login');
+    // http post request to backend Flask
     var response = await http.post(
       url,
       headers: <String, String>{
@@ -178,14 +182,17 @@ class _LoginPage extends State<LoginPage> {
       body: jsonEncode(
           <String, String>{'email': emailText, 'password': passwordText}),
     );
+    // parse json and retrieve the result
     bool result = jsonDecode(response.body)['result'];
 
     if (result) {
+      // login successes and navigate to camera page
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CameraScreen()),
       );
     } else {
+      // login failed and show error message
       showDialog(
           context: context,
           builder: (context) {

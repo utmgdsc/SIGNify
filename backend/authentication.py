@@ -10,12 +10,15 @@ firebaseConfig = {
     "appId": "1:544688048548:web:dfc7c1be04f31c4cae5931"
 }
 
+# initialize firebase
 firebase = pyrebase.initialize_app(firebaseConfig)
+# access firebase authentication
 auth = firebase.auth()
 
 
 def register_account(email, password):
     try:
+        # create user account in firebase
         user = auth.create_user_with_email_and_password(email, password)
         return True
     except:
@@ -24,6 +27,7 @@ def register_account(email, password):
 
 def login_account(email, password):
     try:
+        # verify user account
         login = auth.sign_in_with_email_and_password(email, password)
         return True
     except:

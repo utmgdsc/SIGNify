@@ -177,8 +177,10 @@ class _CreateAccount extends State<CreateAccount> {
         ),
       ),
       validator: (value) {
+        // check email empty
         if (value == null || value.isEmpty) {
           return ('Please enter an email');
+          // check email format
         } else if (!EmailValidator.validate(value)) {
           return ('Please enter a valid email');
         }
@@ -258,7 +260,9 @@ class _CreateAccount extends State<CreateAccount> {
   }
 
   createAccount(String emailText, String passwordText) async {
+    // parse URL
     var url = Uri.parse('http://127.0.0.1:5000/register');
+    // http post request to backend Flask
     var response = await http.post(
       url,
       headers: <String, String>{
@@ -267,14 +271,17 @@ class _CreateAccount extends State<CreateAccount> {
       body: jsonEncode(
           <String, String>{'email': emailText, 'password': passwordText}),
     );
+    // parse json and retrieve the result
     bool result = jsonDecode(response.body)['result'];
 
     if (result) {
+      // register successes and navigate to login page
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
+      // register failed and show error message
       showDialog(
           context: context,
           builder: (context) {
