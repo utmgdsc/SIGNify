@@ -1,4 +1,11 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:http/http.dart' as http;
+
+import 'login_page.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -7,6 +14,7 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccount extends State<CreateAccount> {
   final formkey = GlobalKey<FormState>();
+  final TextEditingController email = TextEditingController();
   final TextEditingController pass = TextEditingController();
   final TextEditingController confirm = TextEditingController();
   bool _passwordVisibleFirst = false;
@@ -58,7 +66,7 @@ class _CreateAccount extends State<CreateAccount> {
                         title("What is your email?"),
                       ],
                     ),
-                    emailField(),
+                    emailField(email),
                     const SizedBox(
                       height: 10,
                     ),
@@ -128,11 +136,13 @@ class _CreateAccount extends State<CreateAccount> {
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               onPressed: () {
-                                if (formkey.currentState!.validate()) {}
+                                if (formkey.currentState!.validate()) {
+                                  createAccount(email.text, pass.text);
+                                }
                               },
                               color: Color(0xff108A7E),
                               child: const Text(
-                                "LOG IN",
+                                "Create Account",
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
@@ -157,14 +167,25 @@ class _CreateAccount extends State<CreateAccount> {
     );
   }
 
-  Widget emailField() {
+  Widget emailField(TextEditingController email) {
     return TextFormField(
+      controller: email,
       decoration: InputDecoration(
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: 15,
         ),
       ),
+      validator: (value) {
+        // check email empty
+        if (value == null || value.isEmpty) {
+          return ('Please enter an email');
+          // check email format
+        } else if (!EmailValidator.validate(value)) {
+          return ('Please enter a valid email');
+        }
+        return null;
+      },
     );
   }
 
@@ -236,5 +257,44 @@ class _CreateAccount extends State<CreateAccount> {
         return null;
       },
     );
+  }
+
+  createAccount(String emailText, String passwordText) async {
+    // parse URL
+    var url = Uri.parse('http://127.0.0.1:5000/register');
+    // http post request to backend Flask
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+          <String, String>{'email': emailText, 'password': passwordText}),
+    );
+    // parse json and retrieve the result
+    bool result = jsonDecode(response.body)['result'];
+
+    if (result) {
+      // register successes and navigate to login page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
+      // register failed and show error message
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              content: Text(
+                'Email already exist',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4.0))),
+            );
+          });
+    }
   }
 }
