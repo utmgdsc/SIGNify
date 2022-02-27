@@ -172,7 +172,7 @@ class _LoginPage extends State<LoginPage> {
 
   login(String emailText, String passwordText) async {
     // parse URL
-    var url = Uri.parse('http://127.0.0.1:5000/login');
+    var url = Uri.parse('http://10.0.2.2:5000/login');
     // http post request to backend Flask
     var response = await http.post(
       url,
