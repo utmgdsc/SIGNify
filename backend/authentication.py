@@ -22,7 +22,7 @@ def register_account(email, password):
 
 def login_account(email, password):
     try:
-        # verify user account
+        # verify user account and return user id
         login = auth.sign_in_with_email_and_password(email, password)
         return login["localId"]
     except:

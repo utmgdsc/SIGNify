@@ -17,8 +17,9 @@ class MySettingsPage extends StatefulWidget {
 class _MySettingsPageState extends State<MySettingsPage> {
   @override
   Widget build(BuildContext context) {
-    // Create themeNotifier variable to access theme_model method
+    // Create themeNotifier variable to access theme_model class method
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    // Create userInfo variable to access user_info class method
     final userInfo = Provider.of<UserInfo>(context);
     themeNotifier.getTheme;
 
@@ -63,11 +64,13 @@ class _MySettingsPageState extends State<MySettingsPage> {
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
               onPressed: () {
+                // User is logged in and can view history
                 if (userInfo.getUserId.isNotEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HistoryPage()),
                   );
+                  // User is not logged in, a message will pop up
                 } else {
                   showDialog(
                       context: context,
@@ -197,7 +200,9 @@ class _MySettingsPageState extends State<MySettingsPage> {
     );
   }
 
+  // Display login or logout button according to user status
   Widget loginLogout(UserInfo userInfo) {
+    // Display login button is user is not logged in
     if (userInfo.getUserId.isEmpty) {
       return TextButton.icon(
         icon: const Icon(
@@ -218,6 +223,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
           );
         },
       );
+      // Display logout button is user is logged in
     } else {
       return TextButton.icon(
         icon: const Icon(

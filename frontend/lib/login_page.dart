@@ -19,6 +19,7 @@ class _LoginPage extends State<LoginPage> {
   final TextEditingController password = TextEditingController();
 
   Widget build(BuildContext context) {
+    // Create userInfo variable to access user_info class method
     final userInfo = Provider.of<UserInfo>(context);
     return Scaffold(
         appBar: AppBar(
@@ -176,8 +177,9 @@ class _LoginPage extends State<LoginPage> {
     String userId = jsonDecode(response.body)['id'];
 
     if (userId.isNotEmpty) {
-      // login successes and navigate to camera page
+      // store user id
       userInfo.setUserId(userId);
+      // login successes and navigate to camera page
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CameraScreen()),

@@ -34,9 +34,12 @@ void main() {
     }
 
     runApp(
+      // Used for multiple provider, provider can be shared in all pages
       MultiProvider(
         providers: [
+          // user_info class
           Provider(create: (context) => UserInfo(userId)),
+          // theme_model class
           ChangeNotifierProvider(
               create: (context) => ThemeNotifier(currentTheme)),
         ],
@@ -50,7 +53,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // Create themeNotifier variable to access theme_model class method
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    // Create userInfo variable to access user_info class method
     final userInfo = Provider.of<UserInfo>(context);
     return MaterialApp(
         title: 'SIGNify',
