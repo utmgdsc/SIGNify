@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_theme.dart';
+import 'package:frontend/home.dart';
 import 'package:frontend/theme_model.dart';
-import 'package:frontend/login_page.dart';
 import 'package:frontend/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +55,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'SIGNify',
         theme: themeNotifier.getTheme,
-        home: userInfo.getUserId.isEmpty ? LoginPage() : CameraScreen());
+        home: userInfo.getUserId.isEmpty ? HomePage() : CameraScreen());
   }
 }

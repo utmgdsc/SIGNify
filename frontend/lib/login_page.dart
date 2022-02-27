@@ -72,19 +72,6 @@ class _LoginPage extends State<LoginPage> {
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
                     ),
-                    Row(
-                      children: const <Widget>[
-                        Text(
-                          'Forgot your password?',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            decorationThickness: 2,
-                          ),
-                        ),
-                      ],
-                    ),
                     Container(
                       margin: EdgeInsets.only(bottom: 30),
                     ),
