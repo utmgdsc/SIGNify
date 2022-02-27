@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/customTheme.dart';
-import 'package:frontend/camera_screen.dart';
+import 'package:frontend/custom_theme.dart';
 import 'package:frontend/theme_model.dart';
-import 'package:frontend/create_account.dart';
 import 'package:frontend/login_page.dart';
+import 'package:frontend/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'camera_screen.dart';
 
 void main() {
   // Initialize widget binding
@@ -13,8 +14,9 @@ void main() {
   // Access app local data
   SharedPreferences.getInstance().then((sharedPreferences) {
     // Get local data with key
-    var color = sharedPreferences.getString('ThemeColor');
-    var isDark = sharedPreferences.getBool('isDark') ?? false;
+    String color = sharedPreferences.getString('ThemeColor') ?? "default";
+    bool isDark = sharedPreferences.getBool('isDark') ?? false;
+    String userId = sharedPreferences.getString("userId") ?? "";
 
     // Set theme color according to local data
     if (color == 'pink') {
@@ -30,28 +32,29 @@ void main() {
     } else {
       currentTheme = createThemeData(defaultColor, isDark);
     }
-    runApp(const MyApp());
+
+    runApp(
+      MultiProvider(
+        providers: [
+          Provider(create: (context) => UserInfo(userId)),
+          ChangeNotifierProvider(
+              create: (context) => ThemeNotifier(currentTheme)),
+        ],
+        child: MyApp(),
+      ),
+    );
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Use provider class to update theme in real time
-    return ChangeNotifierProvider(
-      // Initialize theme model class
-      create: (context) => ThemeNotifier(currentTheme),
-      // Need to wrap with Consumer in order to use Provider feature
-      child: Consumer<ThemeNotifier>(
-        builder: (context, themeNotifier, child) => MaterialApp(
-          title: 'SIGNify',
-          theme: themeNotifier.getTheme,
-          home: LoginPage(),
-        ),
-      ),
-    );
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final userInfo = Provider.of<UserInfo>(context);
+    return MaterialApp(
+        title: 'SIGNify',
+        theme: themeNotifier.getTheme,
+        home: userInfo.getUserId.isEmpty ? LoginPage() : CameraScreen());
   }
 }

@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'camera_screen.dart';
+import 'user_info.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +18,8 @@ class _LoginPage extends State<LoginPage> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
-  Widget build(BuildContext build) {
+  Widget build(BuildContext context) {
+    final userInfo = Provider.of<UserInfo>(context);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -99,7 +102,7 @@ class _LoginPage extends State<LoginPage> {
                               ),
                               onPressed: () {
                                 if (formkey.currentState!.validate()) {
-                                  login(email.text, password.text);
+                                  login(email.text, password.text, userInfo);
                                 }
                               },
                               color: Color(0xff108A7E),
@@ -170,7 +173,7 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  login(String emailText, String passwordText) async {
+  login(String emailText, String passwordText, UserInfo userInfo) async {
     // parse URL
     var url = Uri.parse('http://127.0.0.1:5000/login');
     // http post request to backend Flask
@@ -183,10 +186,11 @@ class _LoginPage extends State<LoginPage> {
           <String, String>{'email': emailText, 'password': passwordText}),
     );
     // parse json and retrieve the result
-    bool result = jsonDecode(response.body)['result'];
+    String userId = jsonDecode(response.body)['id'];
 
-    if (result) {
+    if (userId.isNotEmpty) {
       // login successes and navigate to camera page
+      userInfo.setUserId(userId);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CameraScreen()),
