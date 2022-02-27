@@ -47,3 +47,6 @@ def login():
 def convert_ASL(request):
     # ML component to process video goes here
     return {"word": "hello"}
+
+if __name__ == "__main__":
+    app.run() #debug=True for local testing
