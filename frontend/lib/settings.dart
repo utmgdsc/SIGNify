@@ -200,51 +200,34 @@ class _MySettingsPageState extends State<MySettingsPage> {
     );
   }
 
-  // Display login or logout button according to user status
+// Display login or logout button according to user status
   Widget loginLogout(UserInfo userInfo) {
-    // Display login button is user is not logged in
-    if (userInfo.getUserId.isEmpty) {
-      return TextButton.icon(
-        icon: const Icon(
-          Icons.login,
+    // Display login button is user is not logged in and logout otherwise
+    IconData icon1 = userInfo.getUserId.isEmpty ? Icons.login: Icons.logout;
+    String label1 = userInfo.getUserId.isEmpty ? "Login":  "Log out";
+    
+    return TextButton.icon(
+        icon: Icon(
+          icon1,
           size: 24.0,
         ),
-        label: const Text(
-          "Login",
+        label: Text(
+          label1,
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         style: TextButton.styleFrom(
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft),
         onPressed: () {
+          if (userInfo.getUserId.isNotEmpty) {
+            // Set userInfo to be an empty string
+            userInfo.setUserId('');
+          }
           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-          );
-        },
-      );
-      // Display logout button is user is logged in
-    } else {
-      return TextButton.icon(
-        icon: const Icon(
-          Icons.logout,
-          size: 24.0,
-        ),
-        label: const Text(
-          "Log out",
-          style: TextStyle(fontWeight: FontWeight.w900),
-        ),
-        style: TextButton.styleFrom(
-            padding: const EdgeInsets.only(left: 15),
-            alignment: Alignment.centerLeft),
-        onPressed: () {
-          userInfo.setUserId('');
-            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
         },
       );
-    }
   }
 }
