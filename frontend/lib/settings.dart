@@ -3,7 +3,6 @@ import 'package:frontend/theme_model.dart';
 import 'package:frontend/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/history.dart';
-
 import 'custom_theme.dart';
 import 'login_page.dart';
 
@@ -15,6 +14,22 @@ class MySettingsPage extends StatefulWidget {
 }
 
 class _MySettingsPageState extends State<MySettingsPage> {
+  // double _currentFontSize = 15.0;
+
+  void _showFontSizePopUp(ThemeNotifier themeNotifier) async {
+    final selectedFontSize = await showDialog<double>(
+      context: context,
+      builder: (context) => FontSizePopUp(initialFontSize: themeNotifier.getFontSize(), themeNotifier: themeNotifier,),
+    );
+
+    // if (selectedFontSize != null)
+    // {
+    //   setState(() {
+    //     _currentFontSize = selectedFontSize;
+    //   });
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Create themeNotifier variable to access theme_model class method
@@ -27,7 +42,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: const Text("Settings"),
+        title: Text("Settings"),
       ),
       body: Container(
         // Space between appBar and menu
@@ -136,7 +151,9 @@ class _MySettingsPageState extends State<MySettingsPage> {
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
-              onPressed: () {},
+              onPressed: () {
+                _showFontSizePopUp(themeNotifier);
+              },
             ),
             const Divider(
               color: Colors.grey,
@@ -200,7 +217,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
     );
   }
 
-// Display login or logout button according to user status
+  // Display login or logout button according to user status
   Widget loginLogout(UserInfo userInfo) {
     // Display login button is user is not logged in and logout otherwise
     IconData icon1 = userInfo.getUserId.isEmpty ? Icons.login: Icons.logout;
@@ -229,5 +246,52 @@ class _MySettingsPageState extends State<MySettingsPage> {
             );
         },
       );
+    }
+}
+
+class FontSizePopUp extends StatefulWidget {
+    final double initialFontSize;
+    final ThemeNotifier themeNotifier;
+
+    const FontSizePopUp({Key? key, required this.initialFontSize, required this.themeNotifier}) : super(key: key);
+
+    @override 
+    _FontSizePopUpState createState() => _FontSizePopUpState();
+}
+
+class _FontSizePopUpState extends State<FontSizePopUp> {
+  double _fontSize = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fontSize = widget.initialFontSize;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Font Size'),
+      insetPadding: const EdgeInsets.symmetric(vertical: 280, horizontal: 50),
+      content: Column(
+        // Grid of color
+        children: <Widget> [
+          Slider(
+            value: _fontSize,
+            max: 30,
+            min: 10,
+            divisions: 20,
+            label: _fontSize.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                _fontSize = value;
+                widget.themeNotifier.setFontSize(_fontSize);
+              });
+            },),
+            Text("SIGNify", style: TextStyle(fontSize: _fontSize),)
+          ]
+      ),
+    );
   }
 }
+

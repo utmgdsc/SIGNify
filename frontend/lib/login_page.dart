@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'camera_screen.dart';
 import 'user_info.dart';
 import 'home.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => _LoginPage();
@@ -49,7 +50,7 @@ class _LoginPage extends State<LoginPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
             child: Column(children: [
               Form(
                 key: formkey,
@@ -116,7 +117,7 @@ class _LoginPage extends State<LoginPage> {
   Widget title(String text) {
     return Text(
       text,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
@@ -126,7 +127,7 @@ class _LoginPage extends State<LoginPage> {
   Widget emailField(TextEditingController email) {
     return TextFormField(
       controller: email,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: 15,
@@ -149,7 +150,7 @@ class _LoginPage extends State<LoginPage> {
     return TextFormField(
       obscureText: true,
       controller: password,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: 15,

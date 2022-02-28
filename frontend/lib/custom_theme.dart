@@ -19,7 +19,7 @@ Map<int, Color> primary = {
 final defaultColor = MaterialColor(0xFF118A7E, primary);
 
 // Generate custom theme
-ThemeData createThemeData(MaterialColor color, bool isDark) {
+ThemeData createThemeData(MaterialColor color, bool isDark, double fontSize) {
   if (isDark) {
     return ThemeData(
       primarySwatch: color,
@@ -28,6 +28,7 @@ ThemeData createThemeData(MaterialColor color, bool isDark) {
         backgroundColor: color,
         foregroundColor: Colors.black,
       ),
+      textTheme: TextTheme(bodyText1: TextStyle(fontSize: fontSize), bodyText2: TextStyle(fontSize: fontSize), button: TextStyle(fontSize: fontSize))
     );
   } else {
     return ThemeData(

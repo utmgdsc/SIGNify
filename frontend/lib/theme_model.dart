@@ -10,6 +10,7 @@ class ThemeNotifier extends ChangeNotifier {
   late String _colorName;
   // Use to store current color theme
   late MaterialColor _color;
+  late double _fontSize;
   // Method to retrieve themeData
   ThemeData get getTheme => _themeData;
 
@@ -23,6 +24,7 @@ class ThemeNotifier extends ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _isDark = sharedPreferences.getBool('isDark') ?? false;
     _colorName = sharedPreferences.getString('ThemeColor') ?? 'default';
+    _fontSize = sharedPreferences.getDouble('fontSize')!;
     if (_colorName == 'pink') {
       _color = Colors.pink;
     } else if (_colorName == 'orange') {
@@ -47,7 +49,7 @@ class ThemeNotifier extends ChangeNotifier {
       _isDark = true;
     }
     // Set new theme data
-    _themeData = createThemeData(_color, _isDark);
+    _themeData = createThemeData(_color, _isDark, _fontSize);
     // Update isDark variable in local file
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool('isDark', _isDark);
@@ -58,11 +60,24 @@ class ThemeNotifier extends ChangeNotifier {
   // Update theme color to app
   void setThemeColor(MaterialColor color, String colorName) async {
     _color = color;
-    _themeData = createThemeData(color, _isDark);
+    _themeData = createThemeData(color, _isDark, _fontSize);
     _colorName = colorName;
     // Store current theme to local file
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('ThemeColor', _colorName);
     notifyListeners();
+  }
+
+  setFontSize(double fontSize) async {
+    _fontSize = fontSize;
+    _themeData = createThemeData(_color, _isDark, _fontSize);
+    // Store font size to local file
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setDouble('fontSize', _fontSize);
+    notifyListeners();
+  }
+
+  double getFontSize() {
+    return _fontSize;
   }
 }
