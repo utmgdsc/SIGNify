@@ -237,7 +237,13 @@ class _MySettingsPageState extends State<MySettingsPage> {
         style: TextButton.styleFrom(
             padding: const EdgeInsets.only(left: 15),
             alignment: Alignment.centerLeft),
-        onPressed: () {},
+        onPressed: () {
+          userInfo.setUserId('');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+        },
       );
     }
   }
