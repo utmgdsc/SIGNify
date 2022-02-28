@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/customTheme.dart';
+import 'package:frontend/custom_theme.dart';
 import 'package:frontend/camera_screen.dart';
 import 'package:frontend/settings.dart';
+import 'package:frontend/home.dart';
 import 'package:frontend/theme_model.dart';
-import 'package:frontend/create_account.dart';
-import 'package:frontend/login_page.dart';
+import 'package:frontend/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 void main() {
   // Initialize widget binding
@@ -18,6 +17,8 @@ void main() {
     var color = sharedPreferences.getString('ThemeColor');
     var isDark = sharedPreferences.getBool('isDark') ?? false;
     var fontSize = sharedPreferences.getDouble('fontSize');
+    String userId = sharedPreferences.getString("userId") ?? "";
+
     // Set theme color according to local data
     if (color == 'pink') {
       currentTheme = createThemeData(Colors.pink, isDark, fontSize!);
@@ -32,16 +33,29 @@ void main() {
     } else {
       currentTheme = createThemeData(defaultColor, isDark, fontSize!);
     }
-    runApp(const MyApp());
+
+    runApp(
+      // Used for multiple provider, provider can be shared in all pages
+      MultiProvider(
+        providers: [
+          // user_info class
+          Provider(create: (context) => UserInfo(userId)),
+          // theme_model class
+          ChangeNotifierProvider(
+              create: (context) => ThemeNotifier(currentTheme)),
+        ],
+        child: MyApp(),
+      ),
+    );
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final userInfo = Provider.of<UserInfo>(context);
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     // Use provider class to update theme in real time
     return ChangeNotifierProvider(
       // Initialize theme model class
@@ -51,7 +65,7 @@ class MyApp extends StatelessWidget {
         builder: (context, themeNotifier, child) => MaterialApp(
           title: 'SIGNify',
           theme: themeNotifier.getTheme,
-          home: MySettingsPage(),
+          home: userInfo.getUserId.isEmpty ? HomePage() : const CameraScreen(),
         ),
       ),
     );

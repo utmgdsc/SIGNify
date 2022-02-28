@@ -1,5 +1,6 @@
 from flask import Flask, request
 import json
+from authentication import *
 
 app = Flask(__name__)
 
@@ -18,7 +19,34 @@ def upload_video():
         response = {"error": 400, "message": "Error cannot convert video to text"}
     return json.dumps(response)
 
+@app.route("/register", methods = ["POST"])
+def register():
+    """
+        Api to receive user account info and register it in firebase
+    """
+    # parse request as json
+    account = request.get_json()
+    result = register_account(account["email"], account["password"])
+    # create json to pass back to flutter
+    response = {"result": result}
+    return json.dumps(response)
+
+@app.route("/login", methods = ["POST"])
+def login():
+    """
+        Api to receive user account info, verify it and login user
+    """
+    # convert request json to dictionary
+    account = request.get_json()
+    user_id = login_account(account["email"], account["password"])
+    # create json and pass back to flutter
+    response = {"id": user_id}
+    return json.dumps(response)
+
 
 def convert_ASL(request):
     # ML component to process video goes here
     return {"word": "hello"}
+
+if __name__ == "__main__":
+    app.run() #debug=True for local testing

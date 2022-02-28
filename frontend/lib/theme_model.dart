@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/customTheme.dart';
+import 'package:frontend/custom_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeNotifier extends ChangeNotifier {
@@ -20,7 +20,7 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   // Retrieve and store local data
-  getPreferences() async {
+  void getPreferences() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _isDark = sharedPreferences.getBool('isDark') ?? false;
     _colorName = sharedPreferences.getString('ThemeColor') ?? 'default';
@@ -41,7 +41,7 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   // Change between dark mode and light mode
-  changeThemeMode() async {
+  void changeThemeMode() async {
     // Change _isDark variable value
     if (_isDark) {
       _isDark = false;
@@ -58,7 +58,7 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   // Update theme color to app
-  setThemeColor(MaterialColor color, String colorName) async {
+  void setThemeColor(MaterialColor color, String colorName) async {
     _color = color;
     _themeData = createThemeData(color, _isDark, _fontSize);
     _colorName = colorName;
