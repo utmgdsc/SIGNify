@@ -70,13 +70,6 @@ class _CreateAccount extends State<CreateAccount> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: const <Widget>[
-                        Text(
-                          "You will need to confirm this email later",
-                        ),
-                      ],
-                    ),
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
                     ),

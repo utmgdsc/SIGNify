@@ -3,12 +3,12 @@ import 'package:frontend/create_account.dart';
 import 'package:frontend/login_page.dart';
 import 'package:frontend/camera_screen.dart';
 
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _Home createState() => _Home();
+  _HomePage createState() => _HomePage();
 }
 
-class _Home extends State<Home> {
+class _HomePage extends State<HomePage> {
   Widget build(BuildContext build) {
     return Scaffold(
         body: Container(
@@ -91,18 +91,17 @@ class _Home extends State<Home> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CameraScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CameraScreen()));
                 },
                 child: const Text(
-                'Continue As Guest',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                  decorationThickness: 2,
-                ),
+                  'Continue As Guest',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 2,
+                  ),
                 ),
               ),
             ],

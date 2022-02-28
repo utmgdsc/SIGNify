@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme_model.dart';
+import 'package:frontend/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/history.dart';
 
-import 'customTheme.dart';
+import 'custom_theme.dart';
+import 'login_page.dart';
 
 class MySettingsPage extends StatefulWidget {
   const MySettingsPage({Key? key}) : super(key: key);
@@ -15,8 +17,10 @@ class MySettingsPage extends StatefulWidget {
 class _MySettingsPageState extends State<MySettingsPage> {
   @override
   Widget build(BuildContext context) {
-    // Create themeNotifier variable to access theme_model method
+    // Create themeNotifier variable to access theme_model class method
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    // Create userInfo variable to access user_info class method
+    final userInfo = Provider.of<UserInfo>(context);
     themeNotifier.getTheme;
 
     return Scaffold(
@@ -53,17 +57,36 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 size: 24.0,
               ),
               label: const Text(
-                    "History",
-                    style: TextStyle(fontWeight: FontWeight.w900),
-                ),
+                "History",
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.centerLeft),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HistoryPage()),
-                );
+                // User is logged in and can view history
+                if (userInfo.getUserId.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HistoryPage()),
+                  );
+                  // User is not logged in, a message will pop up
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          content: Text(
+                            'Login to view history page',
+                            style: TextStyle(fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0))),
+                        );
+                      });
+                }
               },
             ),
             // Dark/Light theme button
@@ -121,21 +144,7 @@ class _MySettingsPageState extends State<MySettingsPage> {
               indent: 15,
               endIndent: 15,
             ),
-            // Log out button
-            TextButton.icon(
-              icon: const Icon(
-                Icons.logout,
-                size: 24.0,
-              ),
-              label: const Text(
-                "Log out",
-                style: TextStyle(fontWeight: FontWeight.w900),
-              ),
-              style: TextButton.styleFrom(
-                  padding: const EdgeInsets.only(left: 15),
-                  alignment: Alignment.centerLeft),
-              onPressed: () {},
-            ),
+            loginLogout(userInfo)
           ],
         ),
       ),
@@ -189,5 +198,47 @@ class _MySettingsPageState extends State<MySettingsPage> {
       ),
       child: null,
     );
+  }
+
+  // Display login or logout button according to user status
+  Widget loginLogout(UserInfo userInfo) {
+    // Display login button is user is not logged in
+    if (userInfo.getUserId.isEmpty) {
+      return TextButton.icon(
+        icon: const Icon(
+          Icons.login,
+          size: 24.0,
+        ),
+        label: const Text(
+          "Login",
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
+        style: TextButton.styleFrom(
+            padding: const EdgeInsets.only(left: 15),
+            alignment: Alignment.centerLeft),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
+      );
+      // Display logout button is user is logged in
+    } else {
+      return TextButton.icon(
+        icon: const Icon(
+          Icons.logout,
+          size: 24.0,
+        ),
+        label: const Text(
+          "Log out",
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
+        style: TextButton.styleFrom(
+            padding: const EdgeInsets.only(left: 15),
+            alignment: Alignment.centerLeft),
+        onPressed: () {},
+      );
+    }
   }
 }

@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'camera_screen.dart';
+import 'user_info.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +18,9 @@ class _LoginPage extends State<LoginPage> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
 
-  Widget build(BuildContext build) {
+  Widget build(BuildContext context) {
+    // Create userInfo variable to access user_info class method
+    final userInfo = Provider.of<UserInfo>(context);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -69,19 +73,6 @@ class _LoginPage extends State<LoginPage> {
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
                     ),
-                    Row(
-                      children: const <Widget>[
-                        Text(
-                          'Forgot your password?',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            decorationThickness: 2,
-                          ),
-                        ),
-                      ],
-                    ),
                     Container(
                       margin: EdgeInsets.only(bottom: 30),
                     ),
@@ -99,7 +90,7 @@ class _LoginPage extends State<LoginPage> {
                               ),
                               onPressed: () {
                                 if (formkey.currentState!.validate()) {
-                                  login(email.text, password.text);
+                                  login(email.text, password.text, userInfo);
                                 }
                               },
                               color: Color(0xff108A7E),
@@ -170,7 +161,7 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  login(String emailText, String passwordText) async {
+  login(String emailText, String passwordText, UserInfo userInfo) async {
     // parse URL
     var url = Uri.parse('http://10.0.2.2:5000/login');
     // http post request to backend Flask
@@ -183,9 +174,11 @@ class _LoginPage extends State<LoginPage> {
           <String, String>{'email': emailText, 'password': passwordText}),
     );
     // parse json and retrieve the result
-    bool result = jsonDecode(response.body)['result'];
+    String userId = jsonDecode(response.body)['id'];
 
-    if (result) {
+    if (userId.isNotEmpty) {
+      // store user id
+      userInfo.setUserId(userId);
       // login successes and navigate to camera page
       Navigator.push(
         context,

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/customTheme.dart';
+import 'package:frontend/custom_theme.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/theme_model.dart';
+import 'package:frontend/user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'camera_screen.dart';
 
 void main() {
   // Initialize widget binding
@@ -11,8 +14,9 @@ void main() {
   // Access app local data
   SharedPreferences.getInstance().then((sharedPreferences) {
     // Get local data with key
-    var color = sharedPreferences.getString('ThemeColor');
-    var isDark = sharedPreferences.getBool('isDark') ?? false;
+    String color = sharedPreferences.getString('ThemeColor') ?? "default";
+    bool isDark = sharedPreferences.getBool('isDark') ?? false;
+    String userId = sharedPreferences.getString("userId") ?? "";
 
     // Set theme color according to local data
     if (color == 'pink') {
@@ -28,28 +32,34 @@ void main() {
     } else {
       currentTheme = createThemeData(defaultColor, isDark);
     }
-    runApp(const MyApp());
+
+    runApp(
+      // Used for multiple provider, provider can be shared in all pages
+      MultiProvider(
+        providers: [
+          // user_info class
+          Provider(create: (context) => UserInfo(userId)),
+          // theme_model class
+          ChangeNotifierProvider(
+              create: (context) => ThemeNotifier(currentTheme)),
+        ],
+        child: MyApp(),
+      ),
+    );
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // Use provider class to update theme in real time
-    return ChangeNotifierProvider(
-      // Initialize theme model class
-      create: (context) => ThemeNotifier(currentTheme),
-      // Need to wrap with Consumer in order to use Provider feature
-      child: Consumer<ThemeNotifier>(
-        builder: (context, themeNotifier, child) => MaterialApp(
-          title: 'SIGNify',
-          theme: themeNotifier.getTheme,
-          home: Home(),
-        ),
-      ),
-    );
+    // Create themeNotifier variable to access theme_model class method
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    // Create userInfo variable to access user_info class method
+    final userInfo = Provider.of<UserInfo>(context);
+    return MaterialApp(
+        title: 'SIGNify',
+        theme: themeNotifier.getTheme,
+        home: userInfo.getUserId.isEmpty ? HomePage() : CameraScreen());
   }
 }

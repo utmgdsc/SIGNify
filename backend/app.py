@@ -38,9 +38,9 @@ def login():
     """
     # convert request json to dictionary
     account = request.get_json()
-    result = login_account(account["email"], account["password"])
+    user_id = login_account(account["email"], account["password"])
     # create json and pass back to flutter
-    response = {"result": result}
+    response = {"id": user_id}
     return json.dumps(response)
 
 
