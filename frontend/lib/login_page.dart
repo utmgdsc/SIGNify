@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'camera_screen.dart';
 import 'user_info.dart';
-
+import 'home.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => _LoginPage();
@@ -40,7 +40,10 @@ class _LoginPage extends State<LoginPage> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
             },
           ),
         ),
