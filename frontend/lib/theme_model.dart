@@ -24,7 +24,7 @@ class ThemeNotifier extends ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _isDark = sharedPreferences.getBool('isDark') ?? false;
     _colorName = sharedPreferences.getString('ThemeColor') ?? 'default';
-    _fontSize = sharedPreferences.getDouble('fontSize')!;
+    _fontSize = sharedPreferences.getDouble('fontSize') ?? 15;
     if (_colorName == 'pink') {
       _color = Colors.pink;
     } else if (_colorName == 'orange') {
