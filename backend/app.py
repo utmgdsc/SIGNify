@@ -14,6 +14,7 @@ def upload_video():
     Api to receive video and convert ASL to text reponse 
     """
     try:
+
         response = convert_ASL(request)
     except Exception:
         response = {"error": 400, "message": "Error cannot convert video to text"}
