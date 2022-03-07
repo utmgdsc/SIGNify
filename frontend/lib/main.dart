@@ -16,22 +16,22 @@ void main() {
     // Get local data with key
     var color = sharedPreferences.getString('ThemeColor');
     var isDark = sharedPreferences.getBool('isDark') ?? false;
-    var fontSize = sharedPreferences.getDouble('fontSize');
+    var fontSize = sharedPreferences.getDouble('fontSize') ?? 15;
     String userId = sharedPreferences.getString("userId") ?? "";
 
     // Set theme color according to local data
     if (color == 'pink') {
-      currentTheme = createThemeData(Colors.pink, isDark, fontSize!);
+      currentTheme = createThemeData(Colors.pink, isDark, fontSize);
     } else if (color == 'orange') {
-      currentTheme = createThemeData(Colors.orange, isDark, fontSize!);
+      currentTheme = createThemeData(Colors.orange, isDark, fontSize);
     } else if (color == 'brown') {
-      currentTheme = createThemeData(Colors.brown, isDark, fontSize!);
+      currentTheme = createThemeData(Colors.brown, isDark, fontSize);
     } else if (color == 'lightBlue') {
-      currentTheme = createThemeData(Colors.lightBlue, isDark, fontSize!);
+      currentTheme = createThemeData(Colors.lightBlue, isDark, fontSize);
     } else if (color == 'purple') {
-      currentTheme = createThemeData(Colors.purple, isDark, fontSize!);
+      currentTheme = createThemeData(Colors.purple, isDark, fontSize);
     } else {
-      currentTheme = createThemeData(defaultColor, isDark, fontSize!);
+      currentTheme = createThemeData(defaultColor, isDark, fontSize);
     }
 
     runApp(
@@ -57,17 +57,9 @@ class MyApp extends StatelessWidget {
     final userInfo = Provider.of<UserInfo>(context);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     // Use provider class to update theme in real time
-    return ChangeNotifierProvider(
-      // Initialize theme model class
-      create: (context) => ThemeNotifier(currentTheme),
-      // Need to wrap with Consumer in order to use Provider feature
-      child: Consumer<ThemeNotifier>(
-        builder: (context, themeNotifier, child) => MaterialApp(
-          title: 'SIGNify',
-          theme: themeNotifier.getTheme,
-          home: userInfo.getUserId.isEmpty ? HomePage() : const CameraScreen(),
-        ),
-      ),
-    );
+    return MaterialApp(
+        title: 'SIGNify',
+        theme: themeNotifier.getTheme,
+        home: userInfo.getUserId.isEmpty ? HomePage() : CameraScreen());
   }
 }
