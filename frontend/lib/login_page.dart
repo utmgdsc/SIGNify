@@ -28,17 +28,17 @@ class _LoginPage extends State<LoginPage> {
           centerTitle: false,
           title: const Text(
             "Log In",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            // style: TextStyle(
+            //   color: Colors.black,
+            //   fontSize: 20,
+            //   fontWeight: FontWeight.bold,
+            // ),
           ),
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              // color: Colors.black,
             ),
             onPressed: () {
               Navigator.push(
@@ -56,9 +56,7 @@ class _LoginPage extends State<LoginPage> {
                 key: formkey,
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(
-                      height: 50,
-                    ),
+
                     Row(
                       children: <Widget>[
                         title("Email"),
@@ -80,8 +78,10 @@ class _LoginPage extends State<LoginPage> {
                     Container(
                       margin: EdgeInsets.only(bottom: 30),
                     ),
-                    const SizedBox(
-                      height: 150,
+                    SizedBox(
+                      height: MediaQuery.of(context).viewInsets.bottom != 0
+                          ? 20
+                          : MediaQuery.of(context).size.height * 0.40,
                     ),
                     Align(
                         alignment: Alignment.bottomCenter,
