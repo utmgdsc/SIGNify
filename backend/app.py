@@ -56,8 +56,8 @@ def get_history():
         Api to retrieve user history
     """
     # convert request json to dictionary
-    user_id = request.get_json()
-    history = retrieve_history(user_id["id"])
+    user_id = request.args.get("id")
+    history = retrieve_history(user_id)
     # create json and pass back to flutter
     response = {"history": history}
     return json.dumps(response)
@@ -67,7 +67,8 @@ def convert_ASL(user_id, video):
     # ML component to process video goes here
     text = 'hello'
 
-    store_translation(user_id, text)
+    if user_id:
+        store_translation(user_id, text)
     return {"text": text}
 
 

@@ -50,7 +50,8 @@ class _LoginPage extends State<LoginPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
+            margin:
+                const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
             child: Column(children: [
               Form(
                 key: formkey,
