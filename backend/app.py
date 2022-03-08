@@ -1,26 +1,30 @@
 from flask import Flask, request
 import json
 from authentication import *
+from history import *
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def index():
     return "Hello, welcome to the api endpoint for SIGNify!"
 
-@app.route("/upload_video", methods = ["POST"])
+
+@app.route("/upload_video", methods=["POST"])
 def upload_video():
     """
     Api to receive video and convert ASL to text reponse 
     """
+    video = request.get_json()
     try:
-
-        response = convert_ASL(request)
+        response = convert_ASL(video["id"], video["video"])
     except Exception:
         response = {"error": 400, "message": "Error cannot convert video to text"}
     return json.dumps(response)
 
-@app.route("/register", methods = ["POST"])
+
+@app.route("/register", methods=["POST"])
 def register():
     """
         Api to receive user account info and register it in firebase
@@ -32,7 +36,8 @@ def register():
     response = {"result": result}
     return json.dumps(response)
 
-@app.route("/login", methods = ["POST"])
+
+@app.route("/login", methods=["POST"])
 def login():
     """
         Api to receive user account info, verify it and login user
@@ -45,9 +50,26 @@ def login():
     return json.dumps(response)
 
 
-def convert_ASL(request):
+@app.route("/history", methods=["GET"])
+def get_history():
+    """
+        Api to retrieve user history
+    """
+    # convert request json to dictionary
+    user_id = request.get_json()
+    history = retrieve_history(user_id["id"])
+    # create json and pass back to flutter
+    response = {"history": history}
+    return json.dumps(response)
+
+
+def convert_ASL(user_id, video):
     # ML component to process video goes here
-    return {"word": "hello"}
+    text = 'hello'
+
+    store_translation(user_id, text)
+    return {"text": text}
+
 
 if __name__ == "__main__":
-    app.run() #debug=True for local testing
+    app.run()  # debug=True for local testing
