@@ -1,6 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
+import 'package:frontend/user_info.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -35,9 +41,10 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   // Start or stop recording
-  _recordVideo() async {
+  _recordVideo(String userId) async {
     if (_recording) {
-      final file = await _controller.stopVideoRecording();
+      XFile videoFile = await _controller.stopVideoRecording();
+      print(await uploadVideo(File(videoFile.path), userId));
       setState(() => _recording = false);
     } else {
       await _controller.startVideoRecording();
@@ -45,8 +52,20 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
+  Future<String> uploadVideo(File file, String userId) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://10.0.2.2:5000/upload_video'));
+    request.fields['id'] = userId;
+    request.files.add(await http.MultipartFile.fromPath('video', file.path));
+    var res = await request.send();
+    var response = await http.Response.fromStream(res);
+    return jsonDecode(response.body)['text'];
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Create userInfo variable to access user_info class method
+    final userInfo = Provider.of<UserInfo>(context);
     if (_initialized) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -83,7 +102,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 padding: const EdgeInsets.all(25),
                 child: FloatingActionButton(
                   child: Icon(_recording ? Icons.stop : Icons.circle),
-                  onPressed: () => _recordVideo(),
+                  onPressed: () => _recordVideo(userInfo.getUserId),
                 ),
               ),
             ),

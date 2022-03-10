@@ -1,5 +1,10 @@
+import os
+
 from flask import Flask, request
 import json
+
+from werkzeug.utils import secure_filename
+
 from authentication import *
 
 app = Flask(__name__)
@@ -8,16 +13,14 @@ app = Flask(__name__)
 def index():
     return "Hello, welcome to the api endpoint for SIGNify!"
 
-@app.route("/upload_video", methods = ["POST"])
+@app.route("/upload_video", methods=["POST"])
 def upload_video():
     """
-    Api to receive video and convert ASL to text reponse 
+    Api to receive video and convert ASL to text reponse
     """
-    try:
-
-        response = convert_ASL(request)
-    except Exception:
-        response = {"error": 400, "message": "Error cannot convert video to text"}
+    user_id = request.form.get("id")
+    video = request.files['video']
+    response = convert_ASL(user_id, video)
     return json.dumps(response)
 
 @app.route("/register", methods = ["POST"])
@@ -45,9 +48,13 @@ def login():
     return json.dumps(response)
 
 
-def convert_ASL(request):
+def convert_ASL(user_id, video):
     # ML component to process video goes here
-    return {"word": "hello"}
+    text = 'hello'
+    filename = secure_filename(video.filename)
+    video.save(os.path.join(os.getcwd(), filename))
+
+    return {"text": text}
 
 if __name__ == "__main__":
     app.run() #debug=True for local testing
