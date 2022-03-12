@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask, request
 import json
 
@@ -17,8 +15,11 @@ def upload_video():
     """
     Api to receive video and convert ASL to text reponse
     """
+    # Extract userid from request
     user_id = request.form.get("id")
+    # Extract video from request
     video = request.files['video']
+    # Save video file to local
     video.save(".\\video\\temp.mp4")
     response = translate()
     return json.dumps(response)

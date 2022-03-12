@@ -43,7 +43,9 @@ class _CameraScreenState extends State<CameraScreen> {
   // Start or stop recording
   _recordVideo(String userId) async {
     if (_recording) {
+      // Get video file from camera controller
       XFile videoFile = await _controller.stopVideoRecording();
+      // Parse XFile to file and receive translation
       print(await uploadVideo(File(videoFile.path), userId));
       setState(() => _recording = false);
     } else {
@@ -52,13 +54,19 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
+  // Send video to flask backend
   Future<String> uploadVideo(File file, String userId) async {
+    // MultipartRequest is used for sending files
     var request = http.MultipartRequest(
         'POST', Uri.parse('http://10.0.2.2:5000/upload_video'));
+    // Set userid mapping in request
     request.fields['id'] = userId;
+    // Add video to request with its file path
     request.files.add(await http.MultipartFile.fromPath('video', file.path));
+    // Get response from backend
     var res = await request.send();
     var response = await http.Response.fromStream(res);
+    // Decode message from backend
     return jsonDecode(response.body)['text'];
   }
 
