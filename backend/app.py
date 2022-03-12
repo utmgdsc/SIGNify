@@ -3,9 +3,8 @@ import os
 from flask import Flask, request
 import json
 
-from werkzeug.utils import secure_filename
-
 from authentication import *
+from translation import *
 
 app = Flask(__name__)
 
@@ -20,7 +19,8 @@ def upload_video():
     """
     user_id = request.form.get("id")
     video = request.files['video']
-    response = convert_ASL(user_id, video)
+    video.save(".\\video\\temp.mp4")
+    response = translate()
     return json.dumps(response)
 
 @app.route("/register", methods = ["POST"])
@@ -46,15 +46,6 @@ def login():
     # create json and pass back to flutter
     response = {"id": user_id}
     return json.dumps(response)
-
-
-def convert_ASL(user_id, video):
-    # ML component to process video goes here
-    text = 'hello'
-    filename = secure_filename(video.filename)
-    video.save(os.path.join(os.getcwd(), filename))
-
-    return {"text": text}
 
 if __name__ == "__main__":
     app.run() #debug=True for local testing
