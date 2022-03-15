@@ -1,0 +1,4 @@
+runtime: python39
+handlers:
+  - url: /.*
+    script: main.app
