@@ -19,10 +19,10 @@ def retrieve_history(user_id):
         return history.val()
 
 
-def store_translation(user_id, text):
+def store_translation(user_id, translation):
     history = retrieve_history(user_id)
     if not history:
-        db.child("user").child(user_id).set({"history": [text]})
+        db.child("user").child(user_id).set({"history": [translation]})
     else:
-        history = [text] + history
+        history = [translation] + history
         db.child("user").child(user_id).update({"history": history})

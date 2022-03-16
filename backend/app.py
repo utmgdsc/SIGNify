@@ -11,19 +11,6 @@ def index():
     return "Hello, welcome to the api endpoint for SIGNify!"
 
 
-@app.route("/upload_video", methods=["POST"])
-def upload_video():
-    """
-    Api to receive video and convert ASL to text reponse 
-    """
-    video = request.get_json()
-    try:
-        response = convert_ASL(video["id"], video["video"])
-    except Exception:
-        response = {"error": 400, "message": "Error cannot convert video to text"}
-    return json.dumps(response)
-
-
 @app.route("/register", methods=["POST"])
 def register():
     """
@@ -57,19 +44,21 @@ def get_history():
     """
     # convert request json to dictionary
     user_id = request.args.get("id")
-    history = retrieve_history(user_id)
+    history = retrieve_history("a")
     # create json and pass back to flutter
     response = {"history": history}
     return json.dumps(response)
 
 
-def convert_ASL(user_id, video):
-    # ML component to process video goes here
-    text = 'hello'
-
+@app.route("/history", methods=["POST"])
+def post_history():
+    """
+    Api to receive translation and store it to database
+    """
+    history = request.get_json()
+    user_id = history["id"]
     if user_id:
-        store_translation(user_id, text)
-    return {"text": text}
+        store_translation(user_id, history["translation"])
 
 
 if __name__ == "__main__":
