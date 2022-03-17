@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
@@ -87,6 +88,19 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 200,
+                height: 200,
+                child: Text(""),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 5,
+                    )),
+              ),
+            )
           ],
         ),
       );
