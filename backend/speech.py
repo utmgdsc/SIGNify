@@ -3,12 +3,12 @@ import os
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "service-account-key.json"
 
-def convert_to_speech(text):
+def convert_to_speech(speech_text):
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
 
     # Set the text input to be synthesized
-    synthesis_input = texttospeech.SynthesisInput(text)
+    synthesis_input = texttospeech.SynthesisInput(text=speech_text)
 
     # Build the voice request, select the language code ("en-US") and the ssml
     # voice gender ("neutral")
@@ -28,7 +28,7 @@ def convert_to_speech(text):
     )
 
     # The response's audio_content is binary.
-    with open("output.mp3", "wb") as out:
+    with open("..\\frontend\\assets\\audio\\speech.mp3", "wb") as out:
         # Write the response to the output file.
         out.write(response.audio_content)
-        print('Audio content written to file "output.mp3"')
+        print('Audio content written to file "speech.mp3"')

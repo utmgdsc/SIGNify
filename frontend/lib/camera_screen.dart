@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _recording = false;
   bool _initialized = true;
   late CameraController _controller;
+  AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
 
   @override
   void initState() {
@@ -87,6 +89,15 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                icon: Icon(Icons.volume_up),
+                onPressed: () {
+                  audioPlayer.open(Audio('assets/audio/speech.mp3'));
+                },
+              ),
+            )
           ],
         ),
       );

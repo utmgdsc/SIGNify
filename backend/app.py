@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
 from authentication import *
+from speech import *
 
 app = Flask(__name__)
 
@@ -47,7 +48,10 @@ def login():
 
 def convert_ASL(request):
     # ML component to process video goes here
+    #text = "hello"
+    convert_to_speech("why u bully me")
     return {"word": "hello"}
 
-if __name__ == "__main__":
-    app.run() #debug=True for local testing
+
+
+convert_ASL("what the why sad")
