@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
+import 'package:tflite/tflite.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -13,16 +14,20 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _recording = false;
   bool _initialized = true;
   late CameraController _controller;
+  late CameraImage cameraImage;
+  late List recognitions;
 
   @override
   void initState() {
     _cameraSetUp();
+    _loadModel();
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    Tflite.close();
     super.dispose();
   }
 
@@ -37,12 +42,35 @@ class _CameraScreenState extends State<CameraScreen> {
   // Start or stop recording
   _recordVideo() async {
     if (_recording) {
-      final file = await _controller.stopVideoRecording();
+      _controller.stopImageStream();
       setState(() => _recording = false);
     } else {
-      await _controller.startVideoRecording();
       setState(() => _recording = true);
+      _controller.startImageStream((image) {
+        cameraImage = image;
+        _runModel();
+      });
     }
+  }
+
+  Future _loadModel() async {
+    Tflite.close();
+    await Tflite.loadModel(model: "", labels: "");
+  }
+
+  _runModel() async {
+    recognitions = await Tflite.detectObjectOnFrame(
+          bytesList: cameraImage.planes.map((plane) {
+            return plane.bytes;
+          }).toList(),
+          imageHeight: cameraImage.height,
+          imageWidth: cameraImage.width,
+          imageMean: 127.5,
+          imageStd: 127.5,
+          numResultsPerClass: 1,
+          threshold: 0.1,
+        ) ??
+        [];
   }
 
   @override
