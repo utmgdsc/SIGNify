@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:screenshot/screenshot.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/settings.dart';
+import 'dart:typed_data';
+import 'package:image/image.dart' as IMG;
+import 'package:native_screenshot/native_screenshot.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -17,8 +19,6 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _initialized = true;
   late CameraController _controller;
   late Timer timer;
-  ScreenshotController screenshotController = ScreenshotController();
-
   @override
   void initState() {
     _cameraSetUp();
@@ -47,9 +47,24 @@ class _CameraScreenState extends State<CameraScreen> {
     } else {
       setState(() => _recording = true);
       timer = Timer.periodic(const Duration(milliseconds: 500), (timer) async {
-        screenshotController.capture().then((capturedImage) async {
-          File image = File.fromRawPath(capturedImage!);
-        });
+        String? path = await NativeScreenshot.takeScreenshot();
+
+        if (path == null || path.isEmpty)
+        {
+          print("Screenshot didnt work");
+        }
+
+        File imgFile = File(path!);
+        // Cropping the image
+        Uint8List bytes = imgFile.readAsBytesSync();
+        IMG.Image? src = IMG.decodeImage(bytes);
+
+        if (src != null)
+        {
+          IMG.Image destImage = IMG.copyCrop(src, 300, 990, 560, 560);
+          var jpg = IMG.encodeJpg(destImage);
+          File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
+        }
       });
     }
   }
@@ -61,9 +76,7 @@ class _CameraScreenState extends State<CameraScreen> {
         child: CircularProgressIndicator(),
       );
     } else {
-      return Screenshot(
-        controller: screenshotController,
-        child: Scaffold(
+      return Scaffold(
           body: Stack(
             children: [
               CameraPreview(_controller),
@@ -114,8 +127,7 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             ],
           ),
-        ),
-      );
+        );
     }
   }
 }
