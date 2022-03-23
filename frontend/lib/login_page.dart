@@ -167,7 +167,7 @@ class _LoginPage extends State<LoginPage> {
 
   login(String emailText, String passwordText, UserInfo userInfo) async {
     // parse URL
-    var url = Uri.parse('http://10.0.2.2:5000/login');
+    var url = Uri.parse('https://signify-10529.uc.r.appspot.com/login');
     // http post request to backend Flask
     var response = await http.post(
       url,
