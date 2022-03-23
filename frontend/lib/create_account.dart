@@ -254,7 +254,7 @@ class _CreateAccount extends State<CreateAccount> {
 
   createAccount(String emailText, String passwordText) async {
     // parse URL
-    var url = Uri.parse('http://127.0.0.1:5000/register');
+    var url = Uri.parse('https://signify-10529.uc.r.appspot.com/register');
     // http post request to backend Flask
     var response = await http.post(
       url,
