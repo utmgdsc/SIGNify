@@ -21,6 +21,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _initialized = true;
   late CameraController _controller;
   late Timer timer;
+  String output = "";
   @override
   void initState() {
     _cameraSetUp();
@@ -66,7 +67,8 @@ class _CameraScreenState extends State<CameraScreen> {
           IMG.Image destImage = IMG.copyCrop(src, 300, 990, 560, 560);
           var jpg = IMG.encodeJpg(destImage);
           // var res  = await imageToByteListFloat32(destImage, 560, 0.0, 255.0);
-          var res = await Tflite.runModelOnBinary(binary: imageToByteListFloat32(destImage, 560, 0.0, 255.0), numResults: 29);
+          IMG.Image resizedImage = IMG.copyResize(destImage, width:64, height:64);
+          var res = await Tflite.runModelOnBinary(binary: imageToByteListFloat32(resizedImage, 64, 0.0, 255.0), numResults: 29);
           print(res);
           // File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
         }
