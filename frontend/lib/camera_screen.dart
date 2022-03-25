@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:frontend/settings.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _recording = false;
   bool _initialized = true;
   late CameraController _controller;
-  AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -93,8 +93,10 @@ class _CameraScreenState extends State<CameraScreen> {
               alignment: Alignment.bottomRight,
               child: IconButton(
                 icon: Icon(Icons.volume_up),
-                onPressed: () {
-                  audioPlayer.open(Audio('assets/audio/speech.mp3'));
+                onPressed: () async {
+                  await flutterTts.setLanguage("en-US");
+                  await flutterTts.setPitch(1);
+                  await flutterTts.speak("why you bully me");
                 },
               ),
             )
