@@ -7,6 +7,7 @@ import 'package:frontend/settings.dart';
 import 'dart:typed_data';
 import 'package:image/image.dart' as IMG;
 import 'package:native_screenshot/native_screenshot.dart';
+import 'package:tflite/tflite.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({Key? key}) : super(key: key);
@@ -64,11 +65,30 @@ class _CameraScreenState extends State<CameraScreen> {
         {
           IMG.Image destImage = IMG.copyCrop(src, 300, 990, 560, 560);
           var jpg = IMG.encodeJpg(destImage);
-          File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
+          // var res  = await imageToByteListFloat32(destImage, 560, 0.0, 255.0);
+          var res = await Tflite.runModelOnBinary(binary: imageToByteListFloat32(destImage, 560, 0.0, 255.0), numResults: 29);
+          print(res);
+          // File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
         }
       });
     }
   }
+
+  Uint8List imageToByteListFloat32(
+    IMG.Image img, int inputSize, double mean, double std) {
+  var convertedBytes = Float32List(1 * inputSize * inputSize * 3);
+  var buffer = Float32List.view(convertedBytes.buffer);
+  int pixelIndex = 0;
+  for (var i = 0; i < inputSize; i++) {
+    for (var j = 0; j < inputSize; j++) {
+      var pixel = img.getPixel(j, i);
+      buffer[pixelIndex++] = (IMG.getRed(pixel) - mean) / std;
+      buffer[pixelIndex++] = (IMG.getGreen(pixel) - mean) / std;
+      buffer[pixelIndex++] = (IMG.getBlue(pixel) - mean) / std;
+    }
+  }
+  return convertedBytes.buffer.asUint8List();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +146,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 ),
               ),
-            ),
+          
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -141,7 +161,6 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             )
           ],
-            ],
           ),
         );
     }
