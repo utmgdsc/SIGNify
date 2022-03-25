@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:async';
 import 'dart:io';
 import 'package:screenshot/screenshot.dart';
@@ -112,6 +113,21 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 ),
               ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 200,
+                height: 200,
+                child: Text(""),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 5,
+                    )),
+              ),
+            )
+          ],
             ],
           ),
         ),
