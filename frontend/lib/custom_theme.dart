@@ -42,6 +42,7 @@ ThemeData createThemeData(MaterialColor color, bool isDark, double fontSize) {
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
       ),
+      textTheme: TextTheme(bodyText1: TextStyle(fontSize: fontSize), bodyText2: TextStyle(fontSize: fontSize), button: TextStyle(fontSize: fontSize))
     );
   }
 }
