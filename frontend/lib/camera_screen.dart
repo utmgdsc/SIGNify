@@ -49,7 +49,7 @@ class _CameraScreenState extends State<CameraScreen> {
       setState(() => _recording = false);
     } else {
       setState(() => _recording = true);
-      timer = Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+      timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
         String? path = await NativeScreenshot.takeScreenshot();
 
         if (path == null || path.isEmpty)
@@ -69,6 +69,11 @@ class _CameraScreenState extends State<CameraScreen> {
           // var res  = await imageToByteListFloat32(destImage, 560, 0.0, 255.0);
           IMG.Image resizedImage = IMG.copyResize(destImage, width:64, height:64);
           var res = await Tflite.runModelOnBinary(binary: imageToByteListFloat32(resizedImage, 64, 0.0, 255.0), numResults: 29);
+          if (res != null)
+          {
+            output = res[0]['label'];
+          }
+          
           print(res);
           // File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
         }
@@ -134,6 +139,10 @@ class _CameraScreenState extends State<CameraScreen> {
                     ),
                   ),
                 ),
+              ),
+              Align(
+                alignment: const Alignment(0, 0.715),
+                child: Text(output, style: const TextStyle(fontSize: 15),),
               ),
               Align(
                 alignment: Alignment.bottomCenter,

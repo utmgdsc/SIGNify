@@ -28,6 +28,8 @@
 	<string>Support Camera Plugins</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Support Camera Plugins</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string> Need access to the photos app </string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -47,7 +49,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string> Need access to the photos app </string>
 </dict>
 </plist>
