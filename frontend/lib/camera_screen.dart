@@ -54,6 +54,9 @@ class _CameraScreenState extends State<CameraScreen> {
   _recordVideo(String userId) async {
     if (_recording) {
       timer.cancel();
+      if (userId.isNotEmpty) {
+        storeHistory(userId, output);
+      }
       setState(() => _recording = false);
     } else {
       setState(() => _recording = true);
@@ -114,7 +117,7 @@ class _CameraScreenState extends State<CameraScreen> {
   // Send video to flask backend
   void storeHistory(String userId, String translation) async {
     // parse URL
-    var url = Uri.parse('http://10.0.2.2:5000/history');
+    var url = Uri.parse('https://signify-10529.uc.r.appspot.com/history');
     // http post request to backend Flask
     var response = await http.post(
       url,

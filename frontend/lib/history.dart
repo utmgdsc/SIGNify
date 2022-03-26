@@ -71,7 +71,8 @@ class _HistoryPageState extends State<HistoryPage> {
     List history = [];
 
     // This is an open REST API endpoint for testing purposes
-    var url = Uri.parse('http://10.0.2.2:5000/history?id=$userId');
+    var url =
+        Uri.parse('https://signify-10529.uc.r.appspot.com/history?id=$userId');
 
     final http.Response response = await http.get(url);
     history = jsonDecode(response.body)['history'];

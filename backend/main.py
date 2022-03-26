@@ -44,7 +44,7 @@ def get_history():
     """
     # convert request json to dictionary
     user_id = request.args.get("id")
-    history = retrieve_history("a")
+    history = retrieve_history(user_id)
     # create json and pass back to flutter
     response = {"history": history}
     return json.dumps(response)
