@@ -27,15 +27,14 @@ class _HomePage extends State<HomePage> {
           Container(
               height: 250,
               width: 250,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.contain,
-                  image: NetworkImage(
-                      "https://cdn.discordapp.com/attachments/934969253134753863/947578940866834474/logo.png"),
+                  image: AssetImage("assets/images/logo.png"),
                 ),
               )),
-          const SizedBox(
-            height: 75,
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.08,
           ),
           Column(
             children: <Widget>[
@@ -98,6 +97,7 @@ class _HomePage extends State<HomePage> {
                   'Continue As Guest',
                   style: TextStyle(
                     fontSize: 17,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                     decorationThickness: 2,

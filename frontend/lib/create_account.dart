@@ -33,17 +33,17 @@ class _CreateAccount extends State<CreateAccount> {
           centerTitle: false,
           title: const Text(
             "Create Account",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            // style: TextStyle(
+            //   color: Colors.black,
+            //   fontSize: 20,
+            //   fontWeight: FontWeight.bold,
+            // ),
           ),
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              // color: Colors.black,
             ),
             onPressed: () {
               Navigator.of(context).pop();
@@ -58,9 +58,7 @@ class _CreateAccount extends State<CreateAccount> {
                 key: formkey,
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(
-                      height: 50,
-                    ),
+
                     Row(
                       children: <Widget>[
                         title("What is your email?"),
@@ -116,8 +114,10 @@ class _CreateAccount extends State<CreateAccount> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 150,
+                    SizedBox(
+                      height: MediaQuery.of(context).viewInsets.bottom != 0
+                          ? 20
+                          : MediaQuery.of(context).size.height * 0.30,
                     ),
                     Align(
                         alignment: Alignment.bottomCenter,
@@ -254,7 +254,7 @@ class _CreateAccount extends State<CreateAccount> {
 
   createAccount(String emailText, String passwordText) async {
     // parse URL
-    var url = Uri.parse('http://127.0.0.1:5000/register');
+    var url = Uri.parse('https://signify-10529.uc.r.appspot.com/register');
     // http post request to backend Flask
     var response = await http.post(
       url,
