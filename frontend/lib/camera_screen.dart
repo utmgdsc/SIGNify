@@ -67,11 +67,18 @@ class _CameraScreenState extends State<CameraScreen> {
           IMG.Image destImage = IMG.copyCrop(src, 300, 990, 560, 560);
           var jpg = IMG.encodeJpg(destImage);
           // var res  = await imageToByteListFloat32(destImage, 560, 0.0, 255.0);
+
+          
+          // path = "../assets/images/IMG_4188.jpg";
+          // Uint8List myGesture = File(path).readAsBytesSync();
+          // IMG.Image? myImage = IMG.decodeImage(myGesture);
+          // IMG.Image resizedImage = IMG.copyResize(myImage!, width:64, height:64);
           IMG.Image resizedImage = IMG.copyResize(destImage, width:64, height:64);
           var res = await Tflite.runModelOnBinary(binary: imageToByteListFloat32(resizedImage, 64, 0.0, 255.0), numResults: 29);
           if (res != null)
           {
             output = res[0]['label'];
+            setState(() {});
           }
           
           print(res);
