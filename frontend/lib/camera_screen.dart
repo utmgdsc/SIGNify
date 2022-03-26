@@ -30,6 +30,9 @@ class _CameraScreenState extends State<CameraScreen> {
 
   late Timer timer;
   String output = "";
+  String prevOutput = "";
+  String translation = "";
+
   @override
   void initState() {
     _cameraSetUp();
@@ -88,6 +91,10 @@ class _CameraScreenState extends State<CameraScreen> {
               numResults: 29);
           if (res != null) {
             output = res[0]['label'];
+            if (output != prevOutput && output.length == 1) {
+              prevOutput = output;
+              translation = translation + output;
+            }
             setState(() {});
           }
 
@@ -176,7 +183,7 @@ class _CameraScreenState extends State<CameraScreen> {
             Align(
               alignment: const Alignment(0, 0.715),
               child: Text(
-                output,
+                translation,
                 style: const TextStyle(fontSize: 15),
               ),
             ),
@@ -219,7 +226,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1);
-                    await flutterTts.speak(output);
+                    await flutterTts.speak(translation.toLowerCase());
                   },
                 ),
               ),
