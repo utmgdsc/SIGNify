@@ -55,10 +55,15 @@ def post_history():
     """
     Api to receive translation and store it to database
     """
-    history = request.get_json()
-    user_id = history["id"]
-    if user_id:
-        store_translation(user_id, history["translation"])
+    try:
+        history = request.get_json()
+        user_id = history["id"]
+        if user_id:
+            store_translation(user_id, history["translation"])
+        response = {"message": "success"}
+    except:
+        response = {"message": "error"}
+    return json.dumps(response)
 
 
 if __name__ == "__main__":
