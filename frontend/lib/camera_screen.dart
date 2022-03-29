@@ -63,6 +63,7 @@ class _CameraScreenState extends State<CameraScreen> {
       setState(() => _recording = false);
     } else {
       setState(() => _recording = true);
+      translation = "";
       timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
         String? path = await NativeScreenshot.takeScreenshot();
 
