@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'dart:typed_data';
 import 'dart:async';
 import 'dart:io';
@@ -5,6 +7,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:frontend/settings.dart';
+import 'package:frontend/user_info.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 import 'package:image/image.dart' as IMG;
 import 'package:native_screenshot/native_screenshot.dart';
@@ -25,6 +30,9 @@ class _CameraScreenState extends State<CameraScreen> {
 
   late Timer timer;
   String output = "";
+  String prevOutput = "";
+  String translation = "";
+
   @override
   void initState() {
     _cameraSetUp();
@@ -46,9 +54,12 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   // Start or stop recording
-  _recordVideo() async {
+  _recordVideo(String userId) async {
     if (_recording) {
       timer.cancel();
+      if (userId.isNotEmpty) {
+        storeHistory(userId, translation);
+      }
       setState(() => _recording = false);
     } else {
       setState(() => _recording = true);
@@ -80,6 +91,10 @@ class _CameraScreenState extends State<CameraScreen> {
               numResults: 29);
           if (res != null) {
             output = res[0]['label'];
+            if (output != prevOutput && output.length == 1) {
+              prevOutput = output;
+              translation = translation + output;
+            }
             setState(() {});
           }
 
@@ -106,8 +121,25 @@ class _CameraScreenState extends State<CameraScreen> {
     return convertedBytes.buffer.asUint8List();
   }
 
+  // Send video to flask backend
+  void storeHistory(String userId, String translation) async {
+    // parse URL
+    var url = Uri.parse('https://signify-10529.uc.r.appspot.com/history');
+    // http post request to backend Flask
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+          <String, String>{'id': userId, 'translation': translation}),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Create userInfo variable to access user_info class method
+    final userInfo = Provider.of<UserInfo>(context);
     if (_initialized) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -151,8 +183,8 @@ class _CameraScreenState extends State<CameraScreen> {
             Align(
               alignment: const Alignment(0, 0.715),
               child: Text(
-                output,
-                style: const TextStyle(fontSize: 15),
+                translation,
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             Align(
@@ -164,7 +196,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 padding: const EdgeInsets.all(25),
                 child: FloatingActionButton(
                   child: Icon(_recording ? Icons.stop : Icons.circle),
-                  onPressed: () => _recordVideo(),
+                  onPressed: () => _recordVideo(userInfo.getUserId),
                 ),
               ),
             ),
@@ -194,7 +226,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1);
-                    await flutterTts.speak(output);
+                    await flutterTts.speak(translation.toLowerCase());
                   },
                 ),
               ),
