@@ -28,7 +28,8 @@ ThemeData createThemeData(MaterialColor color, bool isDark, double fontSize) {
         backgroundColor: color,
         foregroundColor: Colors.black,
       ),
-      textTheme: TextTheme(bodyText1: TextStyle(fontSize: fontSize), bodyText2: TextStyle(fontSize: fontSize), button: TextStyle(fontSize: fontSize))
+      textTheme: TextTheme(bodyText1: TextStyle(fontSize: fontSize), bodyText2: TextStyle(fontSize: fontSize), button: TextStyle(fontSize: fontSize), 
+                           headline1: TextStyle(fontSize: fontSize), headline2: TextStyle(fontSize: fontSize), headline3: TextStyle(fontSize: fontSize), headline4: TextStyle(fontSize: fontSize), headline5: TextStyle(fontSize: fontSize), headline6: TextStyle(fontSize: fontSize),)
     );
   } else {
     return ThemeData(
@@ -42,7 +43,8 @@ ThemeData createThemeData(MaterialColor color, bool isDark, double fontSize) {
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
       ),
-      textTheme: TextTheme(bodyText1: TextStyle(fontSize: fontSize), bodyText2: TextStyle(fontSize: fontSize), button: TextStyle(fontSize: fontSize))
+      textTheme: TextTheme(bodyText1: TextStyle(fontSize: fontSize), bodyText2: TextStyle(fontSize: fontSize), button: TextStyle(fontSize: fontSize),
+                          headline1: TextStyle(fontSize: fontSize), headline2: TextStyle(fontSize: fontSize), headline3: TextStyle(fontSize: fontSize), headline4: TextStyle(fontSize: fontSize), headline5: TextStyle(fontSize: fontSize), headline6: TextStyle(fontSize: fontSize),)
     );
   }
 }
