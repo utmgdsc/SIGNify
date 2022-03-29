@@ -58,7 +58,7 @@ class _CameraScreenState extends State<CameraScreen> {
     if (_recording) {
       timer.cancel();
       if (userId.isNotEmpty) {
-        storeHistory(userId, output);
+        storeHistory(userId, translation);
       }
       setState(() => _recording = false);
     } else {
@@ -184,7 +184,7 @@ class _CameraScreenState extends State<CameraScreen> {
               alignment: const Alignment(0, 0.715),
               child: Text(
                 translation,
-                style: const TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
             Align(
