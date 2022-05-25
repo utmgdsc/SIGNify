@@ -32,6 +32,9 @@ class _CameraScreenState extends State<CameraScreen> {
   String output = "";
   String prevOutput = "";
   String translation = "";
+  double confidenceScore = 0.0;
+  Color boxColor = Colors.black;
+  bool steadyTextDisplay = false;
 
   @override
   void initState() {
@@ -64,7 +67,7 @@ class _CameraScreenState extends State<CameraScreen> {
     } else {
       setState(() => _recording = true);
       translation = "";
-      timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
+      timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
         String? path = await NativeScreenshot.takeScreenshot();
 
         if (path == null || path.isEmpty) {
@@ -92,14 +95,27 @@ class _CameraScreenState extends State<CameraScreen> {
               numResults: 29);
           if (res != null) {
             output = res[0]['label'];
-            if (output != prevOutput && output.length == 1) {
-              prevOutput = output;
-              translation = translation + output;
+            steadyTextDisplay = true;
+            confidenceScore = res[0]['confidence'];
+            if (confidenceScore > 0.85) {
+              // change box colourto green
+              boxColor = Colors.green;
+              steadyTextDisplay = false;
+              if (output != prevOutput && output.length == 1) {
+                prevOutput = output;
+                translation = translation + output;
+              }
+            }
+            else if (confidenceScore > 0.6) {
+              // change box colour to yellow
+              boxColor = Colors.yellow;
+            }
+            else {
+              // change box colour to red
+              boxColor = Colors.red;
             }
             setState(() {});
           }
-
-          print(res);
           // File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
         }
       });
@@ -150,6 +166,16 @@ class _CameraScreenState extends State<CameraScreen> {
         body: Stack(
           children: [
             CameraPreview(_controller),
+            Positioned(
+              left: steadyTextDisplay ? 60 : 175,
+              top: 260,
+              child: Visibility(
+                child: Text(
+                  (steadyTextDisplay ? "Keep steady for accurate results":(confidenceScore*100).toStringAsFixed(2) + "%"),
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -157,7 +183,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 height: 200,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.red,
+                    color: boxColor,
                     width: 5,
                   ),
                 ),
@@ -182,7 +208,7 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             ),
             Align(
-              alignment: const Alignment(0, 0.715),
+              alignment: const Alignment(0, 0.7285),
               child: Text(
                 translation,
                 style: const TextStyle(fontSize: 25),
@@ -209,7 +235,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 child: Text(""),
                 decoration: BoxDecoration(
                     border: Border.all(
-                  color: Colors.red,
+                  color: boxColor,
                   width: 5,
                 )),
               ),
@@ -227,7 +253,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   onPressed: () async {
                     await flutterTts.setLanguage("en-US");
                     await flutterTts.setPitch(1);
-                    await flutterTts.speak(translation.toLowerCase());
+                    await flutterTts.speak(translation);
                   },
                 ),
               ),
