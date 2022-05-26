@@ -25,7 +25,9 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   bool _recording = false;
   bool _initialized = true;
+  int currentCamera = 0;
   late CameraController _controller;
+  late List<CameraDescription> cameras;
   FlutterTts flutterTts = FlutterTts();
 
   late Timer timer;
@@ -48,12 +50,22 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  // Set up the front camera
+  // Set up the camera
   _cameraSetUp() async {
-    final cameras = await availableCameras();
-    _controller = CameraController(cameras[1], ResolutionPreset.max);
+    cameras = await availableCameras();
+    _controller = CameraController(cameras[0], ResolutionPreset.max);
     await _controller.initialize();
     setState(() => _initialized = false);
+  }
+
+  // Switch between front and back camera
+  void switchCamera() async {
+    if (cameras.length > 1) {
+      _controller = CameraController(
+          currentCamera == 0 ? cameras[1] : cameras[0], ResolutionPreset.max);
+      await _controller.initialize();
+      setState(() => currentCamera = currentCamera == 0 ? 1 : 0);
+    }
   }
 
   // Start or stop recording
@@ -105,12 +117,10 @@ class _CameraScreenState extends State<CameraScreen> {
                 prevOutput = output;
                 translation = translation + output;
               }
-            }
-            else if (confidenceScore > 0.6) {
+            } else if (confidenceScore > 0.6) {
               // change box colour to yellow
               boxColor = Colors.yellow;
-            }
-            else {
+            } else {
               // change box colour to red
               boxColor = Colors.red;
             }
@@ -171,7 +181,9 @@ class _CameraScreenState extends State<CameraScreen> {
               top: 260,
               child: Visibility(
                 child: Text(
-                  (steadyTextDisplay ? "Keep steady for accurate results":(confidenceScore*100).toStringAsFixed(2) + "%"),
+                  (steadyTextDisplay
+                      ? "Keep steady for accurate results"
+                      : (confidenceScore * 100).toStringAsFixed(2) + "%"),
                   style: TextStyle(fontSize: 20),
                 ),
               ),
@@ -221,9 +233,36 @@ class _CameraScreenState extends State<CameraScreen> {
                 height: 100,
                 color: Colors.black54,
                 padding: const EdgeInsets.all(25),
-                child: FloatingActionButton(
-                  child: Icon(_recording ? Icons.stop : Icons.circle),
-                  onPressed: () => _recordVideo(userInfo.getUserId),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: const Icon(
+                        Icons.volume_up,
+                        color: Colors.white,
+                      ),
+                      onPressed: () async {
+                        await flutterTts.setLanguage("en-US");
+                        await flutterTts.setPitch(1);
+                        await flutterTts.speak(translation);
+                      },
+                    ),
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: Icon(_recording ? Icons.stop : Icons.circle,
+                          color: Colors.white, size: 40),
+                      onPressed: () => _recordVideo(userInfo.getUserId),
+                    ),
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: const Icon(
+                        Icons.autorenew,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => switchCamera(),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -240,24 +279,6 @@ class _CameraScreenState extends State<CameraScreen> {
                 )),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  iconSize: 35,
-                  icon: const Icon(
-                    Icons.volume_up,
-                    color: Colors.white,
-                  ),
-                  onPressed: () async {
-                    await flutterTts.setLanguage("en-US");
-                    await flutterTts.setPitch(1);
-                    await flutterTts.speak(translation);
-                  },
-                ),
-              ),
-            )
           ],
         ),
       );
