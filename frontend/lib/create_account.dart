@@ -3,8 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:frontend/user_info.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
+import 'camera_screen.dart';
 import 'login_page.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -27,6 +30,8 @@ class _CreateAccount extends State<CreateAccount> {
   }
 
   Widget build(BuildContext build) {
+    // Create userInfo variable to access user_info class method
+    final userInfo = Provider.of<UserInfo>(context);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -58,7 +63,6 @@ class _CreateAccount extends State<CreateAccount> {
                 key: formkey,
                 child: Column(
                   children: <Widget>[
-
                     Row(
                       children: <Widget>[
                         title("What is your email?"),
@@ -130,7 +134,8 @@ class _CreateAccount extends State<CreateAccount> {
                               ),
                               onPressed: () {
                                 if (formkey.currentState!.validate()) {
-                                  createAccount(email.text, pass.text);
+                                  createAccount(
+                                      email.text, pass.text, userInfo);
                                 }
                               },
                               color: Color(0xff108A7E),
@@ -252,9 +257,10 @@ class _CreateAccount extends State<CreateAccount> {
     );
   }
 
-  createAccount(String emailText, String passwordText) async {
+  createAccount(
+      String emailText, String passwordText, UserInfo userInfo) async {
     // parse URL
-    var url = Uri.parse('https://signify-10529.uc.r.appspot.com/register');
+    var url = Uri.parse('http://10.0.2.2:5000/');
     // http post request to backend Flask
     var response = await http.post(
       url,
@@ -265,13 +271,15 @@ class _CreateAccount extends State<CreateAccount> {
           <String, String>{'email': emailText, 'password': passwordText}),
     );
     // parse json and retrieve the result
-    bool result = jsonDecode(response.body)['result'];
+    String userId = jsonDecode(response.body)['id'];
 
-    if (result) {
+    if (userId.isNotEmpty) {
+      // store user id
+      userInfo.setUserId(userId);
       // register successes and navigate to login page
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => const CameraScreen()),
       );
     } else {
       // register failed and show error message
