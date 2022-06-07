@@ -25,13 +25,18 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   bool _recording = false;
   bool _initialized = true;
+  int currentCamera = 0;
   late CameraController _controller;
+  late List<CameraDescription> cameras;
   FlutterTts flutterTts = FlutterTts();
 
   late Timer timer;
   String output = "";
   String prevOutput = "";
   String translation = "";
+  double confidenceScore = 0.0;
+  Color boxColor = Colors.black;
+  bool steadyTextDisplay = false;
 
   @override
   void initState() {
@@ -45,12 +50,22 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  // Set up the front camera
+  // Set up the camera
   _cameraSetUp() async {
-    final cameras = await availableCameras();
-    _controller = CameraController(cameras[1], ResolutionPreset.max);
+    cameras = await availableCameras();
+    _controller = CameraController(cameras[0], ResolutionPreset.max);
     await _controller.initialize();
     setState(() => _initialized = false);
+  }
+
+  // Switch between front and back camera
+  void switchCamera() async {
+    if (cameras.length > 1) {
+      _controller = CameraController(
+          currentCamera == 0 ? cameras[1] : cameras[0], ResolutionPreset.max);
+      await _controller.initialize();
+      setState(() => currentCamera = currentCamera == 0 ? 1 : 0);
+    }
   }
 
   // Start or stop recording
@@ -64,7 +79,7 @@ class _CameraScreenState extends State<CameraScreen> {
     } else {
       setState(() => _recording = true);
       translation = "";
-      timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) async {
+      timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
         String? path = await NativeScreenshot.takeScreenshot();
 
         if (path == null || path.isEmpty) {
@@ -92,14 +107,25 @@ class _CameraScreenState extends State<CameraScreen> {
               numResults: 29);
           if (res != null) {
             output = res[0]['label'];
-            if (output != prevOutput && output.length == 1) {
-              prevOutput = output;
-              translation = translation + output;
+            steadyTextDisplay = true;
+            confidenceScore = res[0]['confidence'];
+            if (confidenceScore > 0.85) {
+              // change box colourto green
+              boxColor = Colors.green;
+              steadyTextDisplay = false;
+              if (output != prevOutput && output.length == 1) {
+                prevOutput = output;
+                translation = translation + output;
+              }
+            } else if (confidenceScore > 0.6) {
+              // change box colour to yellow
+              boxColor = Colors.yellow;
+            } else {
+              // change box colour to red
+              boxColor = Colors.red;
             }
             setState(() {});
           }
-
-          print(res);
           // File croppedImage = await File(imgFile.path).writeAsBytes(jpg);
         }
       });
@@ -150,6 +176,18 @@ class _CameraScreenState extends State<CameraScreen> {
         body: Stack(
           children: [
             CameraPreview(_controller),
+            Positioned(
+              left: steadyTextDisplay ? 60 : 175,
+              top: 260,
+              child: Visibility(
+                child: Text(
+                  (steadyTextDisplay
+                      ? "Keep steady for accurate results"
+                      : (confidenceScore * 100).toStringAsFixed(2) + "%"),
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -157,7 +195,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 height: 200,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.red,
+                    color: boxColor,
                     width: 5,
                   ),
                 ),
@@ -182,7 +220,7 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             ),
             Align(
-              alignment: const Alignment(0, 0.715),
+              alignment: const Alignment(0, 0.7285),
               child: Text(
                 translation,
                 style: const TextStyle(fontSize: 25),
@@ -195,9 +233,36 @@ class _CameraScreenState extends State<CameraScreen> {
                 height: 100,
                 color: Colors.black54,
                 padding: const EdgeInsets.all(25),
-                child: FloatingActionButton(
-                  child: Icon(_recording ? Icons.stop : Icons.circle),
-                  onPressed: () => _recordVideo(userInfo.getUserId),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: const Icon(
+                        Icons.volume_up,
+                        color: Colors.white,
+                      ),
+                      onPressed: () async {
+                        await flutterTts.setLanguage("en-US");
+                        await flutterTts.setPitch(1);
+                        await flutterTts.speak(translation);
+                      },
+                    ),
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: Icon(_recording ? Icons.stop : Icons.circle,
+                          color: Colors.white, size: 40),
+                      onPressed: () => _recordVideo(userInfo.getUserId),
+                    ),
+                    FloatingActionButton(
+                      heroTag: null,
+                      child: const Icon(
+                        Icons.autorenew,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => switchCamera(),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -209,29 +274,11 @@ class _CameraScreenState extends State<CameraScreen> {
                 child: Text(""),
                 decoration: BoxDecoration(
                     border: Border.all(
-                  color: Colors.red,
+                  color: boxColor,
                   width: 5,
                 )),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  iconSize: 35,
-                  icon: const Icon(
-                    Icons.volume_up,
-                    color: Colors.white,
-                  ),
-                  onPressed: () async {
-                    await flutterTts.setLanguage("en-US");
-                    await flutterTts.setPitch(1);
-                    await flutterTts.speak(translation.toLowerCase());
-                  },
-                ),
-              ),
-            )
           ],
         ),
       );
