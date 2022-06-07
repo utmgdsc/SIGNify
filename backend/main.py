@@ -18,9 +18,9 @@ def register():
     """
     # parse request as json
     account = request.get_json()
-    result = register_account(account["email"], account["password"])
+    user_id = register_account(account["email"], account["password"])
     # create json to pass back to flutter
-    response = {"result": result}
+    response = {"id": user_id}
     return json.dumps(response)
 
 

@@ -15,9 +15,9 @@ def register_account(email, password):
     try:
         # create user account in firebase
         user = auth.create_user_with_email_and_password(email, password)
-        return True
+        return user["localId"]
     except:
-        return False
+        return ""
 
 
 def login_account(email, password):

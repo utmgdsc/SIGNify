@@ -17,11 +17,11 @@ import 'dart:typed_data';
 void LoadDetectionModel() async {
   Tflite.close();
   try {
-    await Tflite.loadModel(model: "assets/model.tflite", labels: "assets/labels.txt");
+    await Tflite.loadModel(
+        model: "assets/model.tflite", labels: "assets/labels.txt");
     print("Loaded model successfully");
     TestModel();
-  }
-  on Exception catch (e) {
+  } on Exception catch (e) {
     print("Failed to load model: " + e.toString());
   }
 }
@@ -42,15 +42,18 @@ Uint8List imageToByteListFloat32(
   return convertedBytes.buffer.asUint8List();
 }
 
-Future<image.Image> addAndResize(String s) async{
-  var img = Image.asset(s, width: 64, height: 64,);
-  ByteData testImg = ( await rootBundle.load( s ) );
+Future<image.Image> addAndResize(String s) async {
+  var img = Image.asset(
+    s,
+    width: 64,
+    height: 64,
+  );
+  ByteData testImg = (await rootBundle.load(s));
   image.Image? baseSizeImage = image.decodeImage(testImg.buffer.asUint8List());
   return image.copyResize(baseSizeImage!, height: 64, width: 64);
 }
 
-void TestModel() async
-{
+void TestModel() async {
   image.Image resizeImage;
   // image.copyResize(img, width: 64, height: 64);
   // var out = await Tflite.runModelOnBinary(binary: binary)
@@ -62,15 +65,16 @@ void TestModel() async
       String imgSrc = "assets/images/" + ALPHA[i] + "_test.jpg";
       // To run model, first use the addAndResize to
       resizeImage = await addAndResize(imgSrc);
-      res = await Tflite.runModelOnBinary(binary: imageToByteListFloat32(resizeImage, 64, 0.0, 255.0), numResults: 29);
+      res = await Tflite.runModelOnBinary(
+          binary: imageToByteListFloat32(resizeImage, 64, 0.0, 255.0),
+          numResults: 29);
       if (res[0]['label'] == ALPHA[i]) {
         score++;
       }
     }
     print("Model Score: " + ((score / 26) * 100).toString() + "%");
-  } catch (e)
-  {
-    print( "runModelError: " + e.toString() );
+  } catch (e) {
+    print("runModelError: " + e.toString());
   }
 }
 
@@ -125,8 +129,6 @@ class MyApp extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     // Use provider class to update theme in real time
     return MaterialApp(
-        title: 'SIGNify',
-        theme: themeNotifier.getTheme,
-        home: userInfo.getUserId.isEmpty ? HomePage() : CameraScreen());
+        title: 'SIGNify', theme: themeNotifier.getTheme, home: CameraScreen());
   }
 }
